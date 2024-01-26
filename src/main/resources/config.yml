@@ -1,0 +1,127 @@
+#JSON | MYSQL | MONGODB
+#By default, it's JSON
+#I advise you to use MYSQL or MONGODB instead
+
+database:
+  type: JSON
+  save-period: 300000 #Every 5mins
+  database: "database"
+  mongodb:
+    connection-string: "mongodb+srv://<username>:<password>@<host>/?retryWrites=true&w=majority"
+  mysql:
+    host: "localhost"
+    port: "0"
+    username: "user"
+    password: "password"
+
+################ INFO ################
+#
+# drawer-visibility : Drawers can't be visible beyond this
+# border-material : AIR to remove the border
+# limit : This limit is applied for every slot (MIN: 1, MAX: 4)
+#
+# shulker-mod :
+#  - If enabled, once broken, drawer content would be stocked inside the dropped item like a skulker
+#  - If disabled, once broken, drawer content would be dropped on ground
+#
+# craft :
+#  - You can disable the craft by putting AIR in all slots
+#  - %DRAWER% offer you the possibility to include any drawer item in crafting (example : %basic%)
+#
+
+drawer-visibility: 25
+toggle-border: true
+shulker-mod: true
+
+blacklistedMaterials:
+  - BARREL
+
+drawers:
+  basic:
+    item:
+      name: "§7Simple Drawer"
+      lore:
+        - "§r"
+        - "§8This is a simple drawer"
+        - "§r"
+      material: BARREL
+
+    border-material: STRIPPED_OAK_WOOD
+    limit: 500
+    slot: 1
+    craft:
+      - "OAK_PLANKS" #
+      - "STICK"      # FIRST LINE
+      - "OAK_PLANKS" #
+      - "STICK"      #
+      - "CHEST"      # SECOND LINE
+      - "STICK"      #
+      - "OAK_PLANKS" #
+      - "STICK"      # LAST LINE
+      - "OAK_PLANKS" #
+  duo:
+    item:
+      name: "§eDuo Drawer"
+      lore:
+        - "§r"
+        - "§8This is a duo drawer"
+        - "§r"
+      material: BARREL
+
+    border-material: MANGROVE_WOOD
+    limit: 256 # * slot = total, so for 256 in total there will be 512 items
+    slot: 2
+    craft:
+      - "OAK_PLANKS" #
+      - "IRON_INGOT"      # FIRST LINE
+      - "OAK_PLANKS" #
+      - "IRON_INGOT"      #
+      - "%basic%"      # SECOND LINE
+      - "IRON_INGOT"      #
+      - "OAK_PLANKS" #
+      - "IRON_INGOT"      # LAST LINE
+      - "OAK_PLANKS" #
+  trio:
+    item:
+      name: "§bTrio Drawer"
+      lore:
+        - "§r"
+        - "§8This is a trio drawer"
+        - "§r"
+      material: BARREL
+
+    border-material: SPRUCE_WOOD
+    limit: 500
+    slot: 3
+    craft:
+      - "OAK_PLANKS" #
+      - "GOLD_INGOT"      # FIRST LINE
+      - "OAK_PLANKS" #
+      - "GOLD_INGOT"      #
+      - "%duo%"      # SECOND LINE
+      - "GOLD_INGOT"      #
+      - "OAK_PLANKS" #
+      - "GOLD_INGOT"      # LAST LINE
+      - "OAK_PLANKS" #
+  quadrio:
+    item:
+      name: "§cQuadrio Drawer"
+      lore:
+        - "§r"
+        - "§8This is a quadrio drawer"
+        - "§r"
+      material: BARREL
+
+    border-material: ACACIA_WOOD
+    limit: 750
+    slot: 4
+    craft:
+      - "OAK_PLANKS" #
+      - "NETHERITE_INGOT"      # FIRST LINE
+      - "OAK_PLANKS" #
+      - "NETHERITE_INGOT"      #
+      - "%trio%"      # SECOND LINE
+      - "NETHERITE_INGOT"      #
+      - "OAK_PLANKS" #
+      - "NETHERITE_INGOT"      # LAST LINE
+      - "OAK_PLANKS" #

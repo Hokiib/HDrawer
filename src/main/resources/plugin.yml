@@ -1,0 +1,12 @@
+name: HDrawer
+version: '${version}'
+main: fr.hokib.hdrawer.HDrawer
+api-version: 1.20
+authors: [ Hokib ]
+website: https://hokib.com
+commands:
+  drawer:
+    aliases:
+      - hdrawer
+      - drawers
+    permission: drawer.use
