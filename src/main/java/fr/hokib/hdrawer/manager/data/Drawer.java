@@ -16,7 +16,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemDisplayContext;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.Directional;
 import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -115,6 +118,20 @@ public class Drawer extends DrawerStorage {
         final Config config = HDrawer.get().getConfiguration();
         final DrawerConfig drawerConfig = HDrawer.get().getConfiguration().getDrawerConfig(this.id);
         if (drawerConfig == null) return;
+
+        final Block block = this.location.getBlock();
+        final Material type = drawerConfig.drawer().getType();
+        if (type != block.getType()) {
+            Bukkit.getScheduler().runTask(HDrawer.get(), () -> {
+                //If material in config has changed
+                block.setType(type);
+                if (block.getBlockData() instanceof Directional directional) {
+                    directional.setFacing(this.face);
+                    block.setBlockData(directional);
+                    block.getState().update();
+                }
+            });
+        }
 
         final DisplayAttributes[] attributes = DrawerType.from(drawerConfig.slot()).getAttributes();
 
