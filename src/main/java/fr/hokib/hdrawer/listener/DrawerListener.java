@@ -3,7 +3,9 @@ package fr.hokib.hdrawer.listener;
 import fr.hokib.hdrawer.HDrawer;
 import fr.hokib.hdrawer.manager.DrawerManager;
 import fr.hokib.hdrawer.manager.data.Drawer;
+import fr.hokib.hdrawer.util.ColorUtil;
 import fr.hokib.hdrawer.util.location.LocationUtil;
+import fr.hokib.hdrawer.util.update.UpdateChecker;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -15,20 +17,40 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.util.RayTraceResult;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 public class DrawerListener implements Listener {
 
     private final DrawerManager manager;
+    private final Set<UUID> updateInfoSent = new HashSet<>();
     private final Set<Location> toClear = new HashSet<>();
 
     public DrawerListener(final HDrawer main) {
         this.manager = main.getManager();
+    }
+
+    @EventHandler
+    private void onJoin(PlayerJoinEvent event) {
+        final Player player = event.getPlayer();
+        if (!player.isOp() || HDrawer.get().isUpdated()) return;
+
+        final UUID uuid = player.getUniqueId();
+        if (this.updateInfoSent.contains(uuid)) return;
+
+        player.sendMessage(ColorUtil.color("§8------ &#E747FBH&#D042FCD&#B83DFCr&#A138FDa&#8A33FEw&#722EFEe&#5B29FFr§8 ------"));
+        player.sendMessage("§r");
+        player.sendMessage("§8A new §bupdate §7is available !");
+        player.sendMessage("§r");
+        player.sendMessage("§8§l» §d" + UpdateChecker.RESOURCE_URL);
+        player.sendMessage("§8--------------------");
+        this.updateInfoSent.add(uuid);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

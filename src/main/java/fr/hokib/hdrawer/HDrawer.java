@@ -10,6 +10,7 @@ import fr.hokib.hdrawer.database.type.DatabaseType;
 import fr.hokib.hdrawer.listener.DrawerListener;
 import fr.hokib.hdrawer.manager.DrawerManager;
 import fr.hokib.hdrawer.packet.DrawerRenderer;
+import fr.hokib.hdrawer.util.update.UpdateChecker;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -22,6 +23,7 @@ public final class HDrawer extends JavaPlugin {
     private SaveTask saveTask;
     private DrawerManager manager;
     private DrawerRenderer renderer;
+    private boolean updated = true;
     private boolean disabled = false;
 
     public static HDrawer get() {
@@ -31,6 +33,10 @@ public final class HDrawer extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        UpdateChecker.getVersion(version -> {
+            this.updated = this.getDescription().getVersion().equals(version);
+        });
+
         this.reload();
 
         this.saveTask = new SaveTask(this);
@@ -110,6 +116,10 @@ public final class HDrawer extends JavaPlugin {
 
     public boolean isDisabled() {
         return this.disabled;
+    }
+
+    public boolean isUpdated() {
+        return this.updated;
     }
 
     public DrawerManager getManager() {
