@@ -28,7 +28,12 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
+    - name: Make gradlew executable
+      run: chmod +x ./gradlew
     - name: Build with Gradle
-      uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
+      run: ./gradlew reobfJar
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v3
       with:
-        arguments: reobfJar
+        name: HDrawer
+        path: out/HDrawer*.jar
