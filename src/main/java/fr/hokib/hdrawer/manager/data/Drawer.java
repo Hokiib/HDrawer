@@ -9,7 +9,7 @@ import fr.hokib.hdrawer.util.NumberUtil;
 import fr.hokib.hdrawer.util.location.BorderTuple;
 import fr.hokib.hdrawer.util.location.DisplayAttributes;
 import fr.hokib.hdrawer.util.location.LocationUtil;
-import org.bukkit.Bukkit;
+import fr.hokib.hdrawer.util.update.Version;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -72,7 +72,8 @@ public class Drawer extends DrawerStorage {
 
         final DisplayAttributes[] attributes = DrawerType.from(drawerConfig.slot()).getAttributes();
 
-        final float itemYaw = LocationUtil.getYaw(this.face.getOppositeFace());
+        final boolean newer = Version.getCurrentVersion().isNewerThan(Version.V1_20);
+        final float itemYaw = LocationUtil.getYaw(newer ? this.face.getOppositeFace() : this.face);
         final float textYaw = LocationUtil.getYaw(this.face);
 
         final World world = this.location.getWorld();
@@ -156,7 +157,14 @@ public class Drawer extends DrawerStorage {
         final ItemDisplay item = this.items.get(index);
         final TextDisplay text = this.texts.get(index);
 
-        item.setItemStack(itemStack == null ? EMPTY : itemStack);
+        if (itemStack == null) {
+            item.setItemStack(EMPTY);
+        } else {
+            final ItemStack cloned = itemStack.clone();
+            cloned.setAmount(1);
+            item.setItemStack(cloned);
+        }
+
         text.setText(amount <= 0 ? null : NumberUtil.format(amount));
     }
 

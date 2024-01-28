@@ -9,6 +9,7 @@ import fr.hokib.hdrawer.database.task.SaveTask;
 import fr.hokib.hdrawer.database.type.DatabaseType;
 import fr.hokib.hdrawer.listener.DrawerListener;
 import fr.hokib.hdrawer.manager.DrawerManager;
+import fr.hokib.hdrawer.util.update.ComparableVersion;
 import fr.hokib.hdrawer.util.update.UpdateChecker;
 import fr.hokib.hdrawer.util.update.Version;
 import org.bukkit.Bukkit;
@@ -32,10 +33,20 @@ public final class HDrawer extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
+        final Version serverVersion = Version.getCurrentVersion();
+
+        if (serverVersion.isOlderThan(Version.V1_19_4)) {
+            this.getLogger().warning("Incompatible version ! (Install 1.19.4 -> 1.20.x)");
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
+
+        this.getLogger().info("Loading " + serverVersion.name());
+
         //Plugin version
         UpdateChecker.getVersion(version -> {
-            final Version current = new Version(this.getDescription().getVersion());
-            final Version resource = new Version(version);
+            final ComparableVersion current = new ComparableVersion(this.getDescription().getVersion());
+            final ComparableVersion resource = new ComparableVersion(version);
             final int compared = current.compareTo(resource);
 
             this.updated = compared > 0 || compared == 0;

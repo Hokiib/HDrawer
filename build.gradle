@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "fr.hokib"
-version = "1.0.3"
+version = "1.0.4"
 
 repositories {
     mavenCentral()
@@ -19,7 +19,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly "io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT"
+    compileOnly "io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT"
 
     implementation("org.mongodb:mongodb-driver-sync:4.9.1")
     implementation("com.zaxxer:HikariCP:5.0.1")
