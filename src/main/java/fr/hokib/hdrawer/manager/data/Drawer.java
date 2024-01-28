@@ -10,6 +10,7 @@ import fr.hokib.hdrawer.util.location.BorderTuple;
 import fr.hokib.hdrawer.util.location.DisplayAttributes;
 import fr.hokib.hdrawer.util.location.LocationUtil;
 import fr.hokib.hdrawer.util.update.Version;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -151,7 +152,9 @@ public class Drawer extends DrawerStorage {
     }
 
     @Override
-    protected void update(final ItemStack itemStack, final int index) {
+    protected void update(ItemStack itemStack, final int index) {
+        if(itemStack.getType().isAir()) itemStack = null;
+
         final int amount = itemStack == null ? 0 : itemStack.getAmount();
 
         final ItemDisplay item = this.items.get(index);

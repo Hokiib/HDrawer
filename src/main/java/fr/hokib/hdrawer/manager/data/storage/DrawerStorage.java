@@ -18,7 +18,7 @@ public abstract class DrawerStorage {
 
     protected abstract int getIndexByLocation(final Location location);
 
-    protected abstract void update(final ItemStack itemStack, final int index);
+    protected abstract void update(ItemStack itemStack, final int index);
 
     protected abstract Location getLocation();
 
