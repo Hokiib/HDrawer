@@ -12,14 +12,14 @@ public class Config {
     private final Map<String, DrawerConfig> drawers = new HashMap<>();
     private final Set<Material> blacklistedMaterials = new HashSet<>();
     private DatabaseConfig databaseConfig;
-    private int distance;
+    private float distance;
     private boolean shulkerMod;
     private boolean toggleBorder;
 
     public void reload(FileConfiguration config) {
         this.databaseConfig = DatabaseConfig.fromConfig(config.getConfigurationSection("database"));
 
-        this.distance = config.getInt("drawer-visibility");
+        this.distance = (float) (config.getDouble("drawer-visibility") / 50);
         this.shulkerMod = config.getBoolean("shulker-mod", false);
         this.toggleBorder = config.getBoolean("toggle-border", false);
 
@@ -70,7 +70,7 @@ public class Config {
         return this.drawers.keySet().stream().toList();
     }
 
-    public int getDistance() {
+    public float getDistance() {
         return this.distance;
     }
 }

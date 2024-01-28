@@ -9,6 +9,7 @@ import fr.hokib.hdrawer.util.NumberUtil;
 import fr.hokib.hdrawer.util.location.BorderTuple;
 import fr.hokib.hdrawer.util.location.DisplayAttributes;
 import fr.hokib.hdrawer.util.location.LocationUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -42,6 +43,9 @@ public class Drawer extends DrawerStorage {
         for (final ItemDisplay border : this.borders) {
             border.remove();
         }
+        this.items.clear();
+        this.texts.clear();
+        this.borders.clear();
     }
 
 
@@ -112,6 +116,10 @@ public class Drawer extends DrawerStorage {
                 textDisplay.setViewRange(config.getDistance());
                 textDisplay.teleport(textLocation);
             }));
+
+            if (i < this.content.size()) {
+                this.update(this.content.get(i), i);
+            }
 
             if (this.content.size() == i) this.content.add(EMPTY);
         }
