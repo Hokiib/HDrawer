@@ -105,7 +105,7 @@ public class DrawerCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage(" ");
         sender.sendMessage(ColorUtil.color("&#E350EAA &#DE4DEBp&#D94BECl&#D348EEu&#CE45EFg&#C942F0i&#C440F1n &#BE3DF3m&#B93AF4a&#B438F5d&#AF35F6e &#A932F8b&#A430F9y &#9F2DFAH&#9A2AFBo&#9427FDk&#8F25FEi&#8A22FFb"));
         sender.sendMessage(" ");
-        sender.sendMessage("§8§l» §9" + this.main.getPluginMeta().getWebsite() + " §8§l«");
+        sender.sendMessage("§8§l» §9" + this.main.getDescription().getWebsite() + " §8§l«");
         sender.sendMessage("§8--------------------");
         return true;
     }

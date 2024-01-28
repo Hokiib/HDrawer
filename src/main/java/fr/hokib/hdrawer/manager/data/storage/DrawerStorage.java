@@ -30,7 +30,7 @@ public abstract class DrawerStorage {
 
         final ItemStack storedItem = this.content.get(index);
 
-        if (!storedItem.isEmpty() && !storedItem.isSimilar(hand)) return false;
+        if (!storedItem.getType().isAir() && !storedItem.isSimilar(hand)) return false;
 
         final int amount = storedItem.getAmount();
         final int limit = HDrawer.get().getConfiguration().getDrawerConfig(this.getId()).limit();
@@ -94,12 +94,14 @@ public abstract class DrawerStorage {
         final ItemStack cloned = storedItem.clone();
         cloned.setAmount(remaining);
         this.update(cloned, index);
-        cloned.setAmount(removedAmount);
+
+        final ItemStack backItemStack = storedItem.clone();
+        backItemStack.setAmount(removedAmount);
 
         this.updateContent(storedItem, index, remaining);
 
         //Add in inventory and drop in ground if player is full
-        for (final Map.Entry<Integer, ItemStack> entry : player.getInventory().addItem(cloned).entrySet()) {
+        for (final Map.Entry<Integer, ItemStack> entry : player.getInventory().addItem(backItemStack).entrySet()) {
             this.getLocation().getWorld().dropItemNaturally(this.getLocation(), entry.getValue());
         }
 

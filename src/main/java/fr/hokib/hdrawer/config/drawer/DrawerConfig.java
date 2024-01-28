@@ -8,6 +8,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.Server;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -43,6 +44,7 @@ public record DrawerConfig(String id, ItemStack drawer, Material borderMaterial,
         final int slot = Math.max(1, Math.min(section.getInt("slot"), 4));
 
         final NamespacedKey recipeKey = getRecipe(id);
+
         final ShapedRecipe recipe = new ShapedRecipe(recipeKey, drawer);
         recipe.shape("ABC", "DEF", "GHI");
 
@@ -58,7 +60,7 @@ public record DrawerConfig(String id, ItemStack drawer, Material borderMaterial,
                     final String drawerId = ingredient.replace("%", "");
                     final DrawerConfig config = HDrawer.get().getConfiguration().getDrawerConfig(drawerId);
                     if (config != null) {
-                        recipe.setIngredient(symbol, config.drawer());
+                        recipe.setIngredient(symbol, new RecipeChoice.ExactChoice(config.drawer()));
                         continue;
                     }
                 }
@@ -80,7 +82,7 @@ public record DrawerConfig(String id, ItemStack drawer, Material borderMaterial,
     private static Material getByPath(final ConfigurationSection section, final String key, final Material defaultMaterial) {
         Material material = defaultMaterial;
         try {
-            material = Material.valueOf(section.getString(key));
+            material = Material.valueOf(section.getString(key).toUpperCase());
         } catch (IllegalArgumentException ignored) {
         }
 

@@ -62,7 +62,7 @@ public class DrawerListener implements Listener {
         final String id = DrawerManager.getId(drawerItem);
         if (id == null) return;
 
-        final BlockFace playerFace = LocationUtil.getBlockFace(event.getPlayer().getYaw()).getOppositeFace();
+        final BlockFace playerFace = LocationUtil.getBlockFace(event.getPlayer().getLocation().getYaw()).getOppositeFace();
         final Location location = block.getLocation();
 
         if (block.getBlockData() instanceof Directional directional) {
@@ -154,7 +154,7 @@ public class DrawerListener implements Listener {
             final Material off = inventory.getItemInOffHand().getType();
 
             //To place block next to the drawer
-            boolean cancel = player.isSneaking() && (main.isBlock() && !main.isEmpty() || (main.isEmpty() && off.isBlock()));
+            boolean cancel = player.isSneaking() && (main.isBlock() && !main.isAir() || (main.isAir() && off.isBlock()));
             event.setCancelled(!cancel);
         }
 

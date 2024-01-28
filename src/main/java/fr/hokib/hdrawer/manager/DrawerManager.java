@@ -4,7 +4,6 @@ import fr.hokib.hdrawer.HDrawer;
 import fr.hokib.hdrawer.config.drawer.DrawerConfig;
 import fr.hokib.hdrawer.manager.data.Drawer;
 import fr.hokib.hdrawer.util.Base64ItemStack;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
@@ -94,7 +93,7 @@ public class DrawerManager {
         //Drop drawer
         location.getWorld().dropItemNaturally(location, toDrop);
 
-        Bukkit.getScheduler().runTaskAsynchronously(HDrawer.get(), drawer::delete);
+        drawer.delete();
     }
 
     private void dropDrawer(final Drawer drawer, final Location location) {

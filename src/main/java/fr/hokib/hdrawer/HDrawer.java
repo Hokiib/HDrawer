@@ -9,8 +9,8 @@ import fr.hokib.hdrawer.database.task.SaveTask;
 import fr.hokib.hdrawer.database.type.DatabaseType;
 import fr.hokib.hdrawer.listener.DrawerListener;
 import fr.hokib.hdrawer.manager.DrawerManager;
-import fr.hokib.hdrawer.packet.DrawerRenderer;
 import fr.hokib.hdrawer.util.update.UpdateChecker;
+import fr.hokib.hdrawer.util.update.Version;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -22,9 +22,7 @@ public final class HDrawer extends JavaPlugin {
     private Database database;
     private SaveTask saveTask;
     private DrawerManager manager;
-    private DrawerRenderer renderer;
     private boolean updated = true;
-    private boolean disabled = false;
 
     public static HDrawer get() {
         return instance;
@@ -33,8 +31,14 @@ public final class HDrawer extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+
+        //Plugin version
         UpdateChecker.getVersion(version -> {
-            this.updated = this.getDescription().getVersion().equals(version);
+            final Version current = new Version(this.getDescription().getVersion());
+            final Version resource = new Version(version);
+            final int compared = current.compareTo(resource);
+
+            this.updated = compared > 0 || compared == 0;
         });
 
         this.reload();
@@ -43,15 +47,12 @@ public final class HDrawer extends JavaPlugin {
         this.manager = new DrawerManager();
         this.loadDatabase();
 
-        this.renderer = new DrawerRenderer(this);
-
         final DrawerCommand drawerCommand = new DrawerCommand(this);
         final PluginCommand command = this.getCommand("drawer");
         command.setExecutor(drawerCommand);
         command.setTabCompleter(drawerCommand);
 
         Bukkit.getPluginManager().registerEvents(new DrawerListener(this), this);
-        Bukkit.getPluginManager().registerEvents(this.renderer, this);
     }
 
     public void reload() {
@@ -67,7 +68,6 @@ public final class HDrawer extends JavaPlugin {
         final DatabaseConfig databaseConfig = this.config.getDatabaseConfig();
 
         if (this.manager == null || this.database == null) return;
-        this.disabled = true;
 
         this.manager.hideAll();
 
@@ -81,11 +81,9 @@ public final class HDrawer extends JavaPlugin {
 
                 this.loadDatabase();
                 this.manager.buildAll();
-                this.disabled = false;
             });
         } else {
             this.manager.buildAll();
-            this.disabled = false;
         }
     }
 
@@ -102,20 +100,13 @@ public final class HDrawer extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        this.disabled = true;
-
         if (this.manager != null) this.manager.hideAll();
         if (this.database != null) {
             this.database.save(this.manager);
             this.database.unload();
         }
         if (this.saveTask != null) this.saveTask.stop();
-        if (this.renderer != null) this.renderer.stop();
         if (this.config != null) this.config.unload();
-    }
-
-    public boolean isDisabled() {
-        return this.disabled;
     }
 
     public boolean isUpdated() {

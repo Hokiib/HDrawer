@@ -5,6 +5,7 @@ import fr.hokib.hdrawer.config.drawer.DrawerConfig;
 import fr.hokib.hdrawer.manager.data.Drawer;
 import fr.hokib.hdrawer.util.Base64ItemStack;
 import fr.hokib.hdrawer.util.location.LocationUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 
@@ -27,8 +28,11 @@ public record DrawerData(String content, String id, String location, BlockFace f
         drawer.setId(this.id);
         drawer.setLocation(location);
         drawer.setFace(this.face);
-        drawer.build();
-        drawer.setContent(Base64ItemStack.decode(this.content));
+
+        Bukkit.getScheduler().runTask(HDrawer.get(), () -> {
+            drawer.build();
+            drawer.setContent(Base64ItemStack.decode(this.content));
+        });
 
         return drawer;
     }

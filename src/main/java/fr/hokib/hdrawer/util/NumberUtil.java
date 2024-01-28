@@ -1,11 +1,8 @@
 package fr.hokib.hdrawer.util;
 
 import java.text.DecimalFormat;
-import java.util.SplittableRandom;
 
 public class NumberUtil {
-
-    private static final SplittableRandom RANDOM = new SplittableRandom();
 
     public static String format(final int amount) {
         if (amount < 1000) return String.valueOf(amount);
@@ -14,9 +11,5 @@ public class NumberUtil {
         }
 
         return new DecimalFormat("#.#M").format(amount / 1000000.0);
-    }
-
-    public static int getRandomId() {
-        return RANDOM.nextInt() * Integer.MAX_VALUE;
     }
 }

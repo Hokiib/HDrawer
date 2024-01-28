@@ -17,6 +17,4 @@ public abstract class AsyncTask implements Runnable {
         this.scheduledTask.cancel(true);
     }
 
-    ;
-
 }
