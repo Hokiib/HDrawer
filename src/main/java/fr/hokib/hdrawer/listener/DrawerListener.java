@@ -105,8 +105,9 @@ public class DrawerListener implements Listener {
         if (event.isCancelled()) return;
 
         final Location location = event.getBlock().getLocation();
-        this.manager.remove(location);
-        this.toClear.add(location);
+        if (this.manager.remove(location)) {
+            this.toClear.add(location);
+        }
     }
 
     @EventHandler(priority = EventPriority.LOWEST)

@@ -63,9 +63,9 @@ public class DrawerManager {
         this.drawers.put(location, drawer);
     }
 
-    public void remove(final Location location) {
+    public boolean remove(final Location location) {
         final Drawer drawer = this.drawers.remove(location);
-        if (drawer == null) return;
+        if (drawer == null) return false;
 
         this.deleted.add(location);
         this.unsaved.remove(location);
@@ -81,7 +81,7 @@ public class DrawerManager {
             final String base64 = Base64ItemStack.encode(drawer.getContent());
             if (base64 == null) {
                 this.dropDrawer(drawer, location);
-                return;
+                return true;
             }
 
             container.set(new NamespacedKey(HDrawer.get(), DRAWER_CONTENT), PersistentDataType.STRING, base64);
@@ -94,6 +94,7 @@ public class DrawerManager {
         location.getWorld().dropItemNaturally(location, toDrop);
 
         drawer.delete();
+        return true;
     }
 
     private void dropDrawer(final Drawer drawer, final Location location) {
