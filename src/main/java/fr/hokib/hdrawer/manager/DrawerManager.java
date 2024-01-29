@@ -2,13 +2,17 @@ package fr.hokib.hdrawer.manager;
 
 import fr.hokib.hdrawer.HDrawer;
 import fr.hokib.hdrawer.config.drawer.DrawerConfig;
+import fr.hokib.hdrawer.manager.access.AccessAPI;
+import fr.hokib.hdrawer.manager.access.DrawerAccess;
 import fr.hokib.hdrawer.manager.data.Drawer;
 import fr.hokib.hdrawer.util.Base64ItemStack;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -23,9 +27,14 @@ public class DrawerManager {
 
     private static final String DRAWER_ID = "drawer-id";
     private static final String DRAWER_CONTENT = "drawer-content";
+    private final DrawerAccess drawerAccess;
     private final List<Location> unsaved = new ArrayList<>();
     private final List<Location> deleted = new ArrayList<>();
     private Map<Location, Drawer> drawers = new HashMap<>();
+
+    public DrawerManager(){
+        this.drawerAccess = AccessAPI.from();
+    }
 
     public static String getId(final ItemStack itemStack) {
         final PersistentDataContainer container = itemStack.getItemMeta().getPersistentDataContainer();
@@ -42,6 +51,12 @@ public class DrawerManager {
         container.set(new NamespacedKey(HDrawer.get(), DRAWER_ID), PersistentDataType.STRING, id);
 
         itemStack.setItemMeta(meta);
+    }
+
+    public boolean canAccess(final Player player, final Location drawerLocation){
+        if(player.isOp() || this.drawerAccess == null) return true;
+
+        return this.drawerAccess.canAccess(player, drawerLocation);
     }
 
     public void place(final Location location, final ItemStack drawerItem, final BlockFace face, final String id) {

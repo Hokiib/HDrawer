@@ -4,6 +4,9 @@ main: fr.hokib.hdrawer.HDrawer
 authors: [ Hokib ]
 website: https://hokib.com
 api-version: '1.13'
+softdepend:
+  - SuperiorSkyblock2
+  - BentoBox
 commands:
   drawer:
     aliases:

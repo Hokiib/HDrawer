@@ -7,8 +7,12 @@ import org.bukkit.block.BlockFace;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class LocationUtil {
+
+    public static final Pattern NAME_REGEX = Pattern.compile("\\.(.*?)\\.");
 
     public static float getYaw(final BlockFace face) {
         return switch (face) {
@@ -71,16 +75,19 @@ public class LocationUtil {
     }
 
     public static String convert(final Location location) {
-        return location.getWorld().getName() + "_" + location.getBlockX() + "_" + location.getBlockY() + "_" + location.getBlockZ();
+        return "." + location.getWorld().getName() + "._" + location.getBlockX() + "_" + location.getBlockY() + "_" + location.getBlockZ();
     }
 
     public static Location convert(final String location) {
-        final String[] split = location.split("_");
+        final Matcher matcher = NAME_REGEX.matcher(location);
+        if (!matcher.find()) return null;
 
-        final World world = Bukkit.getWorld(split[0]);
-        final double x = Double.parseDouble(split[1]);
-        final double y = Double.parseDouble(split[2]);
-        final double z = Double.parseDouble(split[3]);
+        final String name = matcher.group(1);
+        final World world = Bukkit.getWorld(name);
+        final String[] split = location.replace(name, "").replace(".", "").substring(1).split("_");
+        final double x = Double.parseDouble(split[0]);
+        final double y = Double.parseDouble(split[1]);
+        final double z = Double.parseDouble(split[2]);
 
         return new Location(world, x, y, z);
     }

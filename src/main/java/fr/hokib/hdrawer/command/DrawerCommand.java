@@ -34,7 +34,7 @@ public class DrawerCommand implements CommandExecutor, TabCompleter {
         switch (args[0]) {
             case "reload" -> {
                 final DatabaseLogger logger = DatabaseLogger.start("Plugin reloaded");
-                this.main.reload();
+                this.main.reload(false);
                 logger.stop();
                 sender.sendMessage(ColorUtil.color("&#FB3DF9P&#F13DF9l&#E63DFAu&#DC3DFAg&#D13CFBi&#C73CFBn &#BC3CFCr&#B23CFCe&#A73CFCl&#9D3CFDo&#923CFDa&#883BFEd&#7D3BFEe&#733BFFd &#683BFF!"));
             }

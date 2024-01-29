@@ -1,5 +1,6 @@
 package fr.hokib.hdrawer;
 
+import com.bgsoftware.superiorskyblock.api.SuperiorSkyblockAPI;
 import fr.hokib.hdrawer.command.DrawerCommand;
 import fr.hokib.hdrawer.config.Config;
 import fr.hokib.hdrawer.config.database.DatabaseConfig;
@@ -52,7 +53,7 @@ public final class HDrawer extends JavaPlugin {
             this.updated = compared > 0 || compared == 0;
         });
 
-        this.reload();
+        this.reload(true);
 
         this.saveTask = new SaveTask(this);
         this.manager = new DrawerManager();
@@ -66,7 +67,7 @@ public final class HDrawer extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new DrawerListener(this), this);
     }
 
-    public void reload() {
+    public void reload(final boolean enabling) {
         //Load config
         if (this.config == null) {
             this.config = new Config();
@@ -80,21 +81,22 @@ public final class HDrawer extends JavaPlugin {
 
         if (this.manager == null || this.database == null) return;
 
-        this.manager.hideAll();
+        if (!enabling) {
+            this.manager.hideAll();
 
-        //Unload database
-        if (!DatabaseType.equals(databaseConfig.type(), this.database)) {
-            Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
-                this.database.save(this.manager);
-                this.database.unload();
+            //Unload database
+            if (!DatabaseType.equals(databaseConfig.type(), this.database)) {
+                Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
+                    this.database.save(this.manager);
+                    this.database.unload();
+                    this.manager.getDrawers().clear();
 
-                this.manager.getDrawers().clear();
-
-                this.loadDatabase();
+                    this.loadDatabase();
+                    this.manager.buildAll();
+                });
+            } else {
                 this.manager.buildAll();
-            });
-        } else {
-            this.manager.buildAll();
+            }
         }
     }
 

@@ -6,6 +6,7 @@ import fr.hokib.hdrawer.manager.data.Drawer;
 import fr.hokib.hdrawer.util.ColorUtil;
 import fr.hokib.hdrawer.util.location.LocationUtil;
 import fr.hokib.hdrawer.util.update.UpdateChecker;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -18,19 +19,19 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.util.RayTraceResult;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class DrawerListener implements Listener {
 
     private final DrawerManager manager;
     private final Set<UUID> updateInfoSent = new HashSet<>();
     private final Set<Location> toClear = new HashSet<>();
+    private final Map<UUID, Long> lastLeftClick = new HashMap<>();
 
     public DrawerListener(final HDrawer main) {
         this.manager = main.getManager();
@@ -139,15 +140,28 @@ public class DrawerListener implements Listener {
 
     @EventHandler
     private void onInteract(PlayerInteractEvent event) {
+        final Player player = event.getPlayer();
+        final UUID uuid = player.getUniqueId();
+        final long now = System.currentTimeMillis();
+
+        if (now -this.lastLeftClick.getOrDefault(uuid, 0L) <= 55) {
+            return;
+        }
+        this.lastLeftClick.put(player.getUniqueId(), now);
+
         final Block block = event.getClickedBlock();
-        if (block == null) return;
+        if (block == null || event.getHand() == EquipmentSlot.OFF_HAND) return;
 
         final Location location = block.getLocation();
         final Drawer drawer = this.manager.getDrawer(location);
         if (drawer == null) return;
 
+        if (!this.manager.canAccess(player, location)) {
+            event.setCancelled(true);
+            return;
+        }
+
         final Action action = event.getAction();
-        final Player player = event.getPlayer();
 
         if (action == Action.RIGHT_CLICK_BLOCK) {
             final PlayerInventory inventory = player.getInventory();
@@ -159,9 +173,7 @@ public class DrawerListener implements Listener {
             event.setCancelled(!cancel);
         }
 
-        if (event.getBlockFace() != drawer.getFace()) {
-            return;
-        }
+        if (event.getBlockFace() != drawer.getFace()) return;
 
         event.setCancelled(true);
 
@@ -169,14 +181,12 @@ public class DrawerListener implements Listener {
         if (result == null) return;
 
         final Location point = result.getHitPosition().toLocation(player.getWorld());
-
         switch (action) {
             case RIGHT_CLICK_BLOCK -> {
                 final ItemStack itemStack = event.getItem();
                 if (itemStack == null) return;
                 if (HDrawer.get().getConfiguration().isBlacklisted(itemStack.getType()))
                     return;
-
                 if (drawer.insertContent(player, itemStack, point)) this.manager.save(location);
             }
             case LEFT_CLICK_BLOCK -> {

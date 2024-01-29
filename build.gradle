@@ -4,10 +4,12 @@ plugins {
 }
 
 group = "fr.hokib"
-version = "1.0.6"
+version = "1.1.0"
 
 repositories {
     mavenCentral()
+
+    //PaperMc
     maven {
         name = "papermc-repo"
         url = "https://repo.papermc.io/repository/maven-public/"
@@ -16,10 +18,22 @@ repositories {
         name = "sonatype"
         url = "https://oss.sonatype.org/content/groups/public/"
     }
+
+    //BentoBox
+    maven {
+        url = "https://repo.codemc.org/repository/maven-snapshots/"
+    }
+
+    //SuperiorSkyblock
+    maven {
+        url = "https://repo.bg-software.com/repository/api/"
+    }
 }
 
 dependencies {
     compileOnly "io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT"
+    compileOnly 'world.bentobox:bentobox:1.21.0-SNAPSHOT'
+    compileOnly "com.bgsoftware:SuperiorSkyblockAPI:2023.3"
 
     implementation("org.mongodb:mongodb-driver-sync:4.9.1")
     implementation("com.zaxxer:HikariCP:5.0.1")

@@ -88,7 +88,6 @@ public abstract class DrawerStorage {
         if (player.isSneaking()) {
             removedAmount = Math.min(storedItem.getMaxStackSize(), amount);
         }
-
         final int remaining = amount - removedAmount;
 
         final ItemStack cloned = storedItem.clone();

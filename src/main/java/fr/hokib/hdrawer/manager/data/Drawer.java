@@ -17,6 +17,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Directional;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.entity.TextDisplay;
 import org.bukkit.inventory.ItemStack;
@@ -24,31 +25,42 @@ import org.bukkit.util.Transformation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Drawer extends DrawerStorage {
 
-    private transient final List<ItemDisplay> items = new ArrayList<>();
-    private transient final List<TextDisplay> texts = new ArrayList<>();
-    private transient final List<ItemDisplay> borders = new ArrayList<>();
+    private transient final List<UUID> items = new ArrayList<>();
+    private transient final List<UUID> texts = new ArrayList<>();
+    private transient final List<UUID> borders = new ArrayList<>();
     private String id;
     private Location location;
     private BlockFace face;
 
     public void delete() {
-        for (final ItemDisplay item : this.items) {
-            item.remove();
+
+        for (final UUID uuid : this.items) {
+            final Entity entity = Bukkit.getEntity(uuid);
+            if (entity == null) continue;
+
+            entity.remove();
         }
-        for (final TextDisplay text : this.texts) {
-            text.remove();
+        for (final UUID uuid : this.texts) {
+            final Entity entity = Bukkit.getEntity(uuid);
+            if (entity == null) continue;
+
+            entity.remove();
         }
-        for (final ItemDisplay border : this.borders) {
-            border.remove();
+        for (final UUID uuid : this.borders) {
+            final Entity entity = Bukkit.getEntity(uuid);
+            if (entity == null) continue;
+
+            entity.remove();
         }
+
         this.items.clear();
         this.texts.clear();
         this.borders.clear();
     }
-
 
     public void build() {
         this.texts.clear();
@@ -101,7 +113,7 @@ public class Drawer extends DrawerStorage {
                 itemDisplay.setInvulnerable(true);
                 itemDisplay.setViewRange(config.getDistance());
                 itemDisplay.teleport(itemLocation);
-            }));
+            }).getUniqueId());
 
             //TextDisplay
             final Location textLocation = this.location.clone();
@@ -117,7 +129,7 @@ public class Drawer extends DrawerStorage {
                 textDisplay.setInvulnerable(true);
                 textDisplay.setViewRange(config.getDistance());
                 textDisplay.teleport(textLocation);
-            }));
+            }).getUniqueId());
 
             if (i < this.content.size()) {
                 this.update(this.content.get(i), i);
@@ -146,21 +158,23 @@ public class Drawer extends DrawerStorage {
                     border.setItemDisplayTransform(ItemDisplay.ItemDisplayTransform.FIXED);
                     border.setInvulnerable(true);
                     border.teleport(location);
-                }));
+                }).getUniqueId());
             }
         }
     }
 
     @Override
     protected void update(ItemStack itemStack, final int index) {
-        if(itemStack.getType().isAir()) itemStack = null;
+        if (itemStack.getType().isAir()) itemStack = null;
 
         final int amount = itemStack == null ? 0 : itemStack.getAmount();
 
-        final ItemDisplay item = this.items.get(index);
-        final TextDisplay text = this.texts.get(index);
+        final ItemDisplay item = (ItemDisplay) Bukkit.getEntity(this.items.get(index));
+        final TextDisplay text = (TextDisplay) Bukkit.getEntity(this.texts.get(index));
 
-        if (itemStack == null) {
+        if (item == null || text == null) return;
+
+        if (itemStack == null || itemStack.getAmount() <= 0) {
             item.setItemStack(EMPTY);
         } else {
             final ItemStack cloned = itemStack.clone();
@@ -177,7 +191,9 @@ public class Drawer extends DrawerStorage {
         int index = 0;
 
         for (int i = 0; i < this.items.size(); i++) {
-            final ItemDisplay item = this.items.get(i);
+            final ItemDisplay item = (ItemDisplay) Bukkit.getEntity(this.items.get(i));
+            if (item == null) continue;
+
             final double distance = item.getLocation().distance(location);
 
             if (lastDistance == -1) {
