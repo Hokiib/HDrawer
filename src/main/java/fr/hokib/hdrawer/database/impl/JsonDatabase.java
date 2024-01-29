@@ -8,8 +8,6 @@ import fr.hokib.hdrawer.database.Database;
 import fr.hokib.hdrawer.manager.DrawerManager;
 import fr.hokib.hdrawer.manager.data.Drawer;
 import fr.hokib.hdrawer.manager.data.storage.DrawerData;
-import fr.hokib.hdrawer.util.location.LocationUtil;
-import org.bukkit.Location;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -33,16 +31,16 @@ public class JsonDatabase implements Database {
 
         final Path path = this.getPath();
 
-        final Map<Location, Drawer> drawers = new HashMap<>();
+        final Map<String, Drawer> drawers = new HashMap<>();
 
         try (final Stream<Path> stream = Files.list(path)) {
             for (final Path minePath : stream.toList()) {
                 try (final Reader reader = Files.newBufferedReader(minePath)) {
-                    final Location location = LocationUtil.convert(minePath.getFileName().toString().replace(".json", ""));
+                    final String stringLocation = minePath.getFileName().toString().replace(".json", "");
                     final DrawerData data = GSON.fromJson(reader, DrawerData.class);
                     if (data == null) continue;
 
-                    drawers.put(location, data.to());
+                    drawers.put(stringLocation, data.to());
                 }
             }
         } catch (IOException e) {
@@ -55,10 +53,10 @@ public class JsonDatabase implements Database {
     @Override
     public void save(DrawerManager manager) {
 
-        for (final Location location : manager.getDeleted()) {
+        for (final String location : manager.getDeleted()) {
             if (manager.getUnsaved().contains(location)) continue;
 
-            final Path path = Path.of(this.getPath().toString(), LocationUtil.convert(location) + ".json");
+            final Path path = Path.of(this.getPath().toString(), location + ".json");
 
             if (Files.notExists(path)) continue;
             try {
@@ -69,11 +67,11 @@ public class JsonDatabase implements Database {
             }
         }
 
-        for (final Location location : manager.getUnsaved()) {
+        for (final String location : manager.getUnsaved()) {
             final Drawer drawer = manager.getDrawer(location);
             if (drawer == null) continue;
 
-            final Path path = Path.of(getPath().toString(), LocationUtil.convert(location) + ".json");
+            final Path path = Path.of(getPath().toString(), location + ".json");
             try (final Writer writer = Files.newBufferedWriter(path)) {
                 GSON.toJson(DrawerData.from(drawer), writer);
             } catch (IOException e) {

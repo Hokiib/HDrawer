@@ -8,8 +8,6 @@ import fr.hokib.hdrawer.database.Database;
 import fr.hokib.hdrawer.manager.DrawerManager;
 import fr.hokib.hdrawer.manager.data.Drawer;
 import fr.hokib.hdrawer.manager.data.storage.DrawerData;
-import fr.hokib.hdrawer.util.location.LocationUtil;
-import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 
 import java.sql.Connection;
@@ -33,7 +31,7 @@ public class MySqlDatabase implements Database {
     public void load(DatabaseConfig config) {
         this.init(config);
 
-        final Map<Location, Drawer> drawers = new HashMap<>();
+        final Map<String, Drawer> drawers = new HashMap<>();
 
         try (final Connection connection = this.database.getConnection()) {
             final PreparedStatement ps = connection.prepareStatement(LOAD_DRAWERS);
@@ -48,7 +46,7 @@ public class MySqlDatabase implements Database {
 
                 final DrawerData data = new DrawerData(content, id, location, face);
 
-                drawers.put(LocationUtil.convert(location), data.to());
+                drawers.put(location, data.to());
             }
 
         } catch (SQLException e) {
@@ -62,8 +60,8 @@ public class MySqlDatabase implements Database {
     public void save(DrawerManager manager) {
         try (final Connection connection = this.database.getConnection()) {
 
-            final List<Location> locations = new ArrayList<>();
-            for (final Location location : manager.getDeleted()) {
+            final List<String> locations = new ArrayList<>();
+            for (final String location : manager.getDeleted()) {
                 if (manager.getUnsaved().contains(location)) continue;
                 locations.add(location);
             }
@@ -113,12 +111,12 @@ public class MySqlDatabase implements Database {
         }
     }
 
-    private String convertLocations(final List<Location> locations) {
+    private String convertLocations(final List<String> locations) {
         final StringBuilder builder = new StringBuilder();
         for (int i = 0; i < locations.size(); i++) {
-            final Location location = locations.get(i);
+            final String location = locations.get(i);
 
-            builder.append("'" + LocationUtil.convert(location) + "'");
+            builder.append("'" + location + "'");
             if ((i + 1) < locations.size()) {
                 builder.append(", ");
             }
@@ -127,14 +125,14 @@ public class MySqlDatabase implements Database {
         return builder.toString();
     }
 
-    private String convertData(final List<Location> unsaved, final DrawerManager manager) {
+    private String convertData(final List<String> unsaved, final DrawerManager manager) {
         final StringBuilder builder = new StringBuilder();
 
         for (int i = 0; i < unsaved.size(); i++) {
-            final Location location = unsaved.get(i);
+            final String location = unsaved.get(i);
             final DrawerData data = DrawerData.from(manager.getDrawer(location));
 
-            builder.append("('" + data.id() + "', '" + LocationUtil.convert(location) + "', '" + data.face() + "', '" + data.content() + "')");
+            builder.append("('" + data.id() + "', '" + location + "', '" + data.face() + "', '" + data.content() + "')");
 
             if (i + 1 < unsaved.size()) {
                 builder.append(", ");

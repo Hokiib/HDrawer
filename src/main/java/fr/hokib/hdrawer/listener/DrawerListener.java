@@ -6,7 +6,6 @@ import fr.hokib.hdrawer.manager.data.Drawer;
 import fr.hokib.hdrawer.util.ColorUtil;
 import fr.hokib.hdrawer.util.location.LocationUtil;
 import fr.hokib.hdrawer.util.update.UpdateChecker;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -17,6 +16,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
+import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -139,22 +139,45 @@ public class DrawerListener implements Listener {
     }
 
     @EventHandler
-    private void onInteract(PlayerInteractEvent event) {
-        final Player player = event.getPlayer();
-        final UUID uuid = player.getUniqueId();
-        final long now = System.currentTimeMillis();
+    private void onHopper(InventoryMoveItemEvent event) {
+        if (event.isCancelled()) return;
 
-        if (now -this.lastLeftClick.getOrDefault(uuid, 0L) <= 55) {
+        final Location source = event.getSource().getLocation();
+        if (this.manager.exist(source)) {
+            event.setCancelled(true);
             return;
         }
-        this.lastLeftClick.put(player.getUniqueId(), now);
 
+        final Location destination = event.getDestination().getLocation();
+        if (this.manager.exist(destination)) {
+            event.setCancelled(true);
+            return;
+        }
+    }
+
+    @EventHandler
+    private void onInteract(PlayerInteractEvent event) {
         final Block block = event.getClickedBlock();
-        if (block == null || event.getHand() == EquipmentSlot.OFF_HAND) return;
+        if (block == null) return;
 
         final Location location = block.getLocation();
         final Drawer drawer = this.manager.getDrawer(location);
         if (drawer == null) return;
+
+        if (event.getHand() == EquipmentSlot.OFF_HAND) {
+            event.setCancelled(true);
+            return;
+        }
+
+        final Player player = event.getPlayer();
+        final UUID uuid = player.getUniqueId();
+        final long now = System.currentTimeMillis();
+
+        if (now - this.lastLeftClick.getOrDefault(uuid, 0L) <= 55) {
+            event.setCancelled(true);
+            return;
+        }
+        this.lastLeftClick.put(player.getUniqueId(), now);
 
         if (!this.manager.canAccess(player, location)) {
             event.setCancelled(true);

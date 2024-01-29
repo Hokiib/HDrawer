@@ -14,12 +14,10 @@ import fr.hokib.hdrawer.database.Database;
 import fr.hokib.hdrawer.manager.DrawerManager;
 import fr.hokib.hdrawer.manager.data.Drawer;
 import fr.hokib.hdrawer.manager.data.storage.DrawerData;
-import fr.hokib.hdrawer.util.location.LocationUtil;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 import org.bson.conversions.Bson;
-import org.bukkit.Location;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,10 +35,10 @@ public class MongoDatabase implements Database {
     public void load(DatabaseConfig config) {
         this.init(config);
 
-        final Map<Location, Drawer> drawers = new HashMap<>();
+        final Map<String, Drawer> drawers = new HashMap<>();
 
         for (final DrawerData data : this.collection.find()) {
-            drawers.put(LocationUtil.convert(data.location()), data.to());
+            drawers.put(data.location(), data.to());
         }
 
         HDrawer.get().getManager().setDrawers(drawers);
@@ -51,7 +49,7 @@ public class MongoDatabase implements Database {
 
         final List<WriteModel<DrawerData>> deleteModels = new ArrayList<>();
 
-        for (final Location location : manager.getDeleted()) {
+        for (final String location : manager.getDeleted()) {
             if (manager.getUnsaved().contains(location)) continue;
 
             deleteModels.add(new DeleteManyModel<>(this.getFilter(location)));
@@ -63,7 +61,7 @@ public class MongoDatabase implements Database {
 
         final List<ReplaceOneModel<DrawerData>> saveModels = new ArrayList<>();
 
-        for (final Location location : manager.getUnsaved()) {
+        for (final String location : manager.getUnsaved()) {
             final Drawer drawer = manager.getDrawer(location);
             if (drawer == null) continue;
 
@@ -120,8 +118,8 @@ public class MongoDatabase implements Database {
         return database.getCollection(FOLDER, DrawerData.class);
     }
 
-    private Bson getFilter(final Location location) {
+    private Bson getFilter(final String location) {
 
-        return Filters.eq("location", LocationUtil.convert(location));
+        return Filters.eq("location", location);
     }
 }

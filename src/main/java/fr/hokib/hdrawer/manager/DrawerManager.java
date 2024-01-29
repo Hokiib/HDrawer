@@ -6,7 +6,7 @@ import fr.hokib.hdrawer.manager.access.AccessAPI;
 import fr.hokib.hdrawer.manager.access.DrawerAccess;
 import fr.hokib.hdrawer.manager.data.Drawer;
 import fr.hokib.hdrawer.util.Base64ItemStack;
-import org.bukkit.Bukkit;
+import fr.hokib.hdrawer.util.location.LocationUtil;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
@@ -18,21 +18,18 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DrawerManager {
 
     private static final String DRAWER_ID = "drawer-id";
     private static final String DRAWER_CONTENT = "drawer-content";
     private final DrawerAccess drawerAccess;
-    private final List<Location> unsaved = new ArrayList<>();
-    private final List<Location> deleted = new ArrayList<>();
-    private Map<Location, Drawer> drawers = new HashMap<>();
+    private final List<String> unsaved = new ArrayList<>();
+    private final List<String> deleted = new ArrayList<>();
+    private Map<String, Drawer> drawers = new HashMap<>();
 
-    public DrawerManager(){
+    public DrawerManager() {
         this.drawerAccess = AccessAPI.from();
     }
 
@@ -53,8 +50,8 @@ public class DrawerManager {
         itemStack.setItemMeta(meta);
     }
 
-    public boolean canAccess(final Player player, final Location drawerLocation){
-        if(player.isOp() || this.drawerAccess == null) return true;
+    public boolean canAccess(final Player player, final Location drawerLocation) {
+        if (player.isOp() || this.drawerAccess == null) return true;
 
         return this.drawerAccess.canAccess(player, drawerLocation);
     }
@@ -75,15 +72,16 @@ public class DrawerManager {
             drawer.setContent(Base64ItemStack.decode(base64));
         }
 
-        this.drawers.put(location, drawer);
+        this.drawers.put(LocationUtil.convert(location), drawer);
     }
 
     public boolean remove(final Location location) {
-        final Drawer drawer = this.drawers.remove(location);
+        final String stringLocation = LocationUtil.convert(location);
+        final Drawer drawer = this.drawers.remove(stringLocation);
         if (drawer == null) return false;
 
-        this.deleted.add(location);
-        this.unsaved.remove(location);
+        this.deleted.add(stringLocation);
+        this.unsaved.remove(stringLocation);
 
         final DrawerConfig config = HDrawer.get().getConfiguration().getDrawerConfig(drawer.getId());
         final ItemStack toDrop = config.drawer().clone();
@@ -135,7 +133,7 @@ public class DrawerManager {
     }
 
     public void save(final Location location) {
-        this.unsaved.add(location);
+        this.unsaved.add(LocationUtil.convert(location));
     }
 
     public void hideAll() {
@@ -156,32 +154,50 @@ public class DrawerManager {
     }
 
     public boolean isDrawer(final Block block) {
-        for (final Location location : this.drawers.keySet()) {
+        for (final String stringLocation : this.drawers.keySet()) {
+            final Location location = LocationUtil.convert(stringLocation);
+            if (location == null) continue;
+
             if (location.getBlock().equals(block)) return true;
         }
 
         return false;
     }
 
-    public List<Location> getDeleted() {
+    public List<String> getDeleted() {
         return this.deleted;
     }
 
-    public List<Location> getUnsaved() {
+    public List<String> getUnsaved() {
         return this.unsaved;
     }
 
     public Drawer getDrawer(final Location location) {
+        return this.drawers.get(LocationUtil.convert(location));
+    }
+
+    public Drawer getDrawer(final String location){
         return this.drawers.get(location);
     }
 
-    public Map<Location, Drawer> getDrawers() {
+    public boolean exist(final Location location) {
+        return this.drawers.containsKey(LocationUtil.convert(location));
+    }
+
+    public Map<String, Drawer> getDrawers() {
         return this.drawers;
     }
 
-    public void setDrawers(final Map<Location, Drawer> drawers) {
+    public void setDrawers(final Map<String, Drawer> drawers) {
         this.drawers = drawers;
+
+        for (final Map.Entry<String, Drawer> entry : new HashSet<>(drawers.entrySet())) {
+            final String location = entry.getKey();
+
+            if (entry.getValue() == null) {
+                drawers.remove(location);
+                this.deleted.add(location);
+            }
+        }
     }
-
-
 }

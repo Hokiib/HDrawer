@@ -7,6 +7,7 @@ api-version: '1.13'
 softdepend:
   - SuperiorSkyblock2
   - BentoBox
+  - Factions
 commands:
   drawer:
     aliases:

@@ -2,20 +2,22 @@ package fr.hokib.hdrawer.manager.access;
 
 import fr.hokib.hdrawer.HDrawer;
 import fr.hokib.hdrawer.manager.access.impl.BentoBoxAccess;
+import fr.hokib.hdrawer.manager.access.impl.FactionsAccess;
 import fr.hokib.hdrawer.manager.access.impl.SuperiorSkyBlockAccess;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
 public enum AccessAPI {
 
-    BENTO_BOX("BentoBox", BentoBoxAccess.class), SUPERIOR_SKYBLOCK("SuperiorSkyblock2", SuperiorSkyBlockAccess.class);
+    BENTO_BOX(BentoBoxAccess.class, "BentoBox"), SUPERIOR_SKYBLOCK(SuperiorSkyBlockAccess.class, "SuperiorSkyblock2"),
+    FACTIONS(FactionsAccess.class, "Factions", "FactionsUUID");
 
-    private final String plugin;
     private final Class<? extends DrawerAccess> accessClass;
+    private final String[] plugins;
 
-    AccessAPI(final String plugin, final Class<? extends DrawerAccess> accessClass) {
-        this.plugin = plugin;
+    AccessAPI(final Class<? extends DrawerAccess> accessClass, final String... plugins) {
         this.accessClass = accessClass;
+        this.plugins = plugins;
     }
 
     public static DrawerAccess from() {
@@ -23,9 +25,11 @@ public enum AccessAPI {
             for (final Plugin plugin : Bukkit.getPluginManager().getPlugins()) {
                 for (final AccessAPI value : values()) {
                     final String name = plugin.getName();
-                    if (name.equals(value.getPlugin())) {
-                        HDrawer.get().getLogger().info("We've found a compatible dependency (" + name + ")");
-                        return value.accessClass.newInstance();
+                    for (final String pluginName : value.getPlugins()) {
+                        if (name.equals(pluginName)) {
+                            HDrawer.get().getLogger().info("We've found a compatible dependency (" + name + ")");
+                            return value.accessClass.newInstance();
+                        }
                     }
                 }
             }
@@ -36,7 +40,7 @@ public enum AccessAPI {
         return null;
     }
 
-    public String getPlugin() {
-        return this.plugin;
+    public String[] getPlugins() {
+        return this.plugins;
     }
 }

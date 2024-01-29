@@ -1,6 +1,6 @@
 plugins {
     id("java")
-    id ("com.github.johnrengelman.shadow") version '7.1.2'
+    id("com.github.johnrengelman.shadow") version '7.1.2'
 }
 
 group = "fr.hokib"
@@ -28,12 +28,17 @@ repositories {
     maven {
         url = "https://repo.bg-software.com/repository/api/"
     }
+
+    maven {
+        url = "https://ci.ender.zone/plugin/repository/everything/"
+    }
 }
 
 dependencies {
     compileOnly "io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT"
-    compileOnly 'world.bentobox:bentobox:1.21.0-SNAPSHOT'
+    compileOnly "world.bentobox:bentobox:1.21.0-SNAPSHOT"
     compileOnly "com.bgsoftware:SuperiorSkyblockAPI:2023.3"
+    compileOnly "com.massivecraft:Factions:1.6.9.5-U0.6.21"
 
     implementation("org.mongodb:mongodb-driver-sync:4.9.1")
     implementation("com.zaxxer:HikariCP:5.0.1")
@@ -66,7 +71,7 @@ processResources {
     }
 }
 
-shadowJar{
+shadowJar {
     destinationDirectory.set(file("out"))
     archiveName = "${project.name}-${project.version}.jar"
 }
