@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 
 public class UpdateChecker {
 
-    private static final int RESOURCE_ID = 114738;
+    private static final int RESOURCE_ID = 114799;
     public static final String RESOURCE_URL = "https://www.spigotmc.org/resources/hdrawer." + RESOURCE_ID + "/";
 
     public static void getVersion(final Consumer<String> consumer) {
