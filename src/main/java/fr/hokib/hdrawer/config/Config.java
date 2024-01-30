@@ -13,6 +13,7 @@ public class Config {
     private final Set<Material> blacklistedMaterials = new HashSet<>();
     private DatabaseConfig databaseConfig;
     private float distance;
+    private int hopperTransit;
     private boolean shulkerMod;
     private boolean toggleBorder;
 
@@ -20,6 +21,7 @@ public class Config {
         this.databaseConfig = DatabaseConfig.fromConfig(config.getConfigurationSection("database"));
 
         this.distance = (float) (config.getDouble("drawer-visibility") / 50);
+        this.hopperTransit = config.getInt("hopper-transit");
         this.shulkerMod = config.getBoolean("shulker-mod", false);
         this.toggleBorder = config.getBoolean("toggle-border", false);
 
@@ -57,6 +59,13 @@ public class Config {
     public boolean isToggleBorder() {
         return this.toggleBorder;
     }
+    public float getDistance() {
+        return this.distance;
+    }
+
+    public int getHopperTransit() {
+        return this.hopperTransit;
+    }
 
     public boolean isBlacklisted(final Material material) {
         return this.blacklistedMaterials.contains(material);
@@ -68,9 +77,5 @@ public class Config {
 
     public List<String> getDrawersId() {
         return this.drawers.keySet().stream().toList();
-    }
-
-    public float getDistance() {
-        return this.distance;
     }
 }

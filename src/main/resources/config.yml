@@ -17,6 +17,7 @@ database:
 ################ INFO ################
 #
 # drawer-visibility : Drawers can't be visible beyond this
+# hopper-transit : Number of items transferred between hoppers and drawers, every second
 # border-material : AIR to remove the border
 # limit : This limit is applied for every slot (MIN: 1, MAX: 4)
 #
@@ -30,6 +31,7 @@ database:
 #
 
 drawer-visibility: 25
+hopper-transit: 3
 toggle-border: true
 shulker-mod: true
 

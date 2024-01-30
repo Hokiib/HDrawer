@@ -2,7 +2,7 @@ package fr.hokib.hdrawer.listener;
 
 import fr.hokib.hdrawer.HDrawer;
 import fr.hokib.hdrawer.manager.DrawerManager;
-import fr.hokib.hdrawer.manager.data.Drawer;
+import fr.hokib.hdrawer.manager.drawer.Drawer;
 import fr.hokib.hdrawer.util.ColorUtil;
 import fr.hokib.hdrawer.util.location.LocationUtil;
 import fr.hokib.hdrawer.util.update.UpdateChecker;

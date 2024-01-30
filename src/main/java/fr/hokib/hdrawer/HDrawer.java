@@ -10,6 +10,7 @@ import fr.hokib.hdrawer.database.task.SaveTask;
 import fr.hokib.hdrawer.database.type.DatabaseType;
 import fr.hokib.hdrawer.listener.DrawerListener;
 import fr.hokib.hdrawer.manager.DrawerManager;
+import fr.hokib.hdrawer.manager.hopper.HopperManager;
 import fr.hokib.hdrawer.util.update.ComparableVersion;
 import fr.hokib.hdrawer.util.update.UpdateChecker;
 import fr.hokib.hdrawer.util.update.Version;
@@ -24,6 +25,7 @@ public final class HDrawer extends JavaPlugin {
     private Database database;
     private SaveTask saveTask;
     private DrawerManager manager;
+    private HopperManager hopperManager;
     private boolean updated = true;
 
     public static HDrawer get() {
@@ -58,6 +60,9 @@ public final class HDrawer extends JavaPlugin {
         this.saveTask = new SaveTask(this);
         this.manager = new DrawerManager();
         this.loadDatabase();
+
+        this.hopperManager = new HopperManager(this);
+        Bukkit.getScheduler().runTaskTimer(this, this.hopperManager, 0, 20L);
 
         final DrawerCommand drawerCommand = new DrawerCommand(this);
         final PluginCommand command = this.getCommand("drawer");

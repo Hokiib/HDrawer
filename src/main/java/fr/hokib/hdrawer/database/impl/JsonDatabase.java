@@ -6,8 +6,8 @@ import fr.hokib.hdrawer.HDrawer;
 import fr.hokib.hdrawer.config.database.DatabaseConfig;
 import fr.hokib.hdrawer.database.Database;
 import fr.hokib.hdrawer.manager.DrawerManager;
-import fr.hokib.hdrawer.manager.data.Drawer;
-import fr.hokib.hdrawer.manager.data.storage.DrawerData;
+import fr.hokib.hdrawer.manager.drawer.Drawer;
+import fr.hokib.hdrawer.manager.drawer.data.DrawerData;
 
 import java.io.IOException;
 import java.io.Reader;

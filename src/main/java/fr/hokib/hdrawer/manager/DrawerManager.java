@@ -4,7 +4,7 @@ import fr.hokib.hdrawer.HDrawer;
 import fr.hokib.hdrawer.config.drawer.DrawerConfig;
 import fr.hokib.hdrawer.manager.access.AccessAPI;
 import fr.hokib.hdrawer.manager.access.DrawerAccess;
-import fr.hokib.hdrawer.manager.data.Drawer;
+import fr.hokib.hdrawer.manager.drawer.Drawer;
 import fr.hokib.hdrawer.util.Base64ItemStack;
 import fr.hokib.hdrawer.util.location.LocationUtil;
 import org.bukkit.Location;
