@@ -10,10 +10,7 @@ import fr.hokib.hdrawer.util.location.BorderTuple;
 import fr.hokib.hdrawer.util.location.DisplayAttributes;
 import fr.hokib.hdrawer.util.location.LocationUtil;
 import fr.hokib.hdrawer.util.update.Version;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Directional;
@@ -107,9 +104,9 @@ public class Drawer extends DrawerStorage {
             this.items.add(world.spawn(itemLocation, ItemDisplay.class, itemDisplay -> {
                 final Transformation transformation = itemDisplay.getTransformation();
                 transformation.getScale().set(attribute.scale(), attribute.scale(), 0.0f);
+                itemDisplay.setTransformation(transformation);
 
                 itemDisplay.setItemDisplayTransform(ItemDisplay.ItemDisplayTransform.GUI);
-                itemDisplay.setTransformation(transformation);
                 itemDisplay.setInvulnerable(true);
                 itemDisplay.setViewRange(config.getDistance());
                 itemDisplay.teleport(itemLocation);
@@ -124,9 +121,10 @@ public class Drawer extends DrawerStorage {
             this.texts.add(world.spawn(textLocation, TextDisplay.class, textDisplay -> {
                 final Transformation transformation = textDisplay.getTransformation();
                 transformation.getScale().set(attribute.scale(), attribute.scale(), attribute.scale());
-
                 textDisplay.setTransformation(transformation);
+
                 textDisplay.setInvulnerable(true);
+                textDisplay.setBackgroundColor(Color.fromARGB(0, 0, 0, 0));
                 textDisplay.setViewRange(config.getDistance());
                 textDisplay.teleport(textLocation);
             }).getUniqueId());
@@ -183,6 +181,13 @@ public class Drawer extends DrawerStorage {
         }
 
         text.setText(amount <= 0 ? null : NumberUtil.format(amount));
+    }
+
+    @Override
+    public void update() {
+        for (int i = 0; i < this.content.size(); i++) {
+            this.update(this.content.get(i), i);
+        }
     }
 
     @Override

@@ -20,6 +20,7 @@ public abstract class DrawerStorage {
 
     protected abstract Location getLocation();
     public abstract void update(ItemStack itemStack, final int index);
+    public abstract void update();
 
     public abstract String getId();
 

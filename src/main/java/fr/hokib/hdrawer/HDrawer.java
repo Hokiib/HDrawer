@@ -1,6 +1,5 @@
 package fr.hokib.hdrawer;
 
-import com.bgsoftware.superiorskyblock.api.SuperiorSkyblockAPI;
 import fr.hokib.hdrawer.command.DrawerCommand;
 import fr.hokib.hdrawer.config.Config;
 import fr.hokib.hdrawer.config.database.DatabaseConfig;
@@ -62,7 +61,9 @@ public final class HDrawer extends JavaPlugin {
         this.loadDatabase();
 
         this.hopperManager = new HopperManager(this);
-        Bukkit.getScheduler().runTaskTimer(this, this.hopperManager, 0, 20L);
+
+        //3item/s so 0,33 * 20L = 6,6
+        Bukkit.getScheduler().runTaskTimer(this, this.hopperManager, 0, 7L);
 
         final DrawerCommand drawerCommand = new DrawerCommand(this);
         final PluginCommand command = this.getCommand("drawer");

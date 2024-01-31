@@ -31,7 +31,6 @@ database:
 #
 
 drawer-visibility: 25
-hopper-transit: 3
 toggle-border: true
 shulker-mod: true
 
