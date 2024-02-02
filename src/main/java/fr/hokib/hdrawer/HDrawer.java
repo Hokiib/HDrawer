@@ -6,6 +6,7 @@ import fr.hokib.hdrawer.config.database.DatabaseConfig;
 import fr.hokib.hdrawer.database.Database;
 import fr.hokib.hdrawer.database.task.SaveTask;
 import fr.hokib.hdrawer.database.type.DatabaseType;
+import fr.hokib.hdrawer.lib.HDrawerDeps;
 import fr.hokib.hdrawer.listener.DrawerListener;
 import fr.hokib.hdrawer.logger.DrawerLogger;
 import fr.hokib.hdrawer.manager.DrawerManager;
@@ -25,6 +26,10 @@ public final class HDrawer extends JavaPlugin {
     private SaveTask saveTask;
     private DrawerManager manager;
     private boolean updated = true;
+
+    public static HDrawer get() {
+        return instance;
+    }
 
     @Override
     public void onLoad() {
@@ -124,10 +129,6 @@ public final class HDrawer extends JavaPlugin {
         }
         if (this.saveTask != null) this.saveTask.stop();
         if (this.config != null) this.config.unload();
-    }
-
-    public static HDrawer get() {
-        return instance;
     }
 
     public boolean isUpdated() {
