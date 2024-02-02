@@ -4,10 +4,10 @@ import fr.hokib.hdrawer.command.DrawerCommand;
 import fr.hokib.hdrawer.config.Config;
 import fr.hokib.hdrawer.config.database.DatabaseConfig;
 import fr.hokib.hdrawer.database.Database;
-import fr.hokib.hdrawer.database.logger.DatabaseLogger;
 import fr.hokib.hdrawer.database.task.SaveTask;
 import fr.hokib.hdrawer.database.type.DatabaseType;
 import fr.hokib.hdrawer.listener.DrawerListener;
+import fr.hokib.hdrawer.logger.DrawerLogger;
 import fr.hokib.hdrawer.manager.DrawerManager;
 import fr.hokib.hdrawer.manager.hopper.HopperManager;
 import fr.hokib.hdrawer.util.update.ComparableVersion;
@@ -24,17 +24,17 @@ public final class HDrawer extends JavaPlugin {
     private Database database;
     private SaveTask saveTask;
     private DrawerManager manager;
-    private HopperManager hopperManager;
     private boolean updated = true;
 
-    public static HDrawer get() {
-        return instance;
+    @Override
+    public void onLoad() {
+        instance = this;
+
+        new HDrawerDeps(this).load();
     }
 
     @Override
     public void onEnable() {
-        instance = this;
-
         final Version serverVersion = Version.getCurrentVersion();
 
         if (serverVersion.isOlderThan(Version.V1_19_4)) {
@@ -43,7 +43,7 @@ public final class HDrawer extends JavaPlugin {
             return;
         }
 
-        this.getLogger().info("Loading " + serverVersion.name());
+        this.getLogger().info("Using " + serverVersion.name());
 
         //Plugin version
         UpdateChecker.getVersion(version -> {
@@ -60,10 +60,8 @@ public final class HDrawer extends JavaPlugin {
         this.manager = new DrawerManager();
         this.loadDatabase();
 
-        this.hopperManager = new HopperManager(this);
-
         //3item/s so 0,33 * 20L = 6,6
-        Bukkit.getScheduler().runTaskTimer(this, this.hopperManager, 0, 7L);
+        Bukkit.getScheduler().runTaskTimer(this, new HopperManager(this), 0, 7L);
 
         final DrawerCommand drawerCommand = new DrawerCommand(this);
         final PluginCommand command = this.getCommand("drawer");
@@ -111,7 +109,7 @@ public final class HDrawer extends JavaPlugin {
             final DatabaseConfig databaseConfig = this.config.getDatabaseConfig();
             this.database = DatabaseType.from(databaseConfig.type());
 
-            final DatabaseLogger logger = DatabaseLogger.start("Database loaded");
+            final DrawerLogger logger = DrawerLogger.start("Database loaded");
             this.database.load(databaseConfig);
             logger.stop();
         });
@@ -126,6 +124,10 @@ public final class HDrawer extends JavaPlugin {
         }
         if (this.saveTask != null) this.saveTask.stop();
         if (this.config != null) this.config.unload();
+    }
+
+    public static HDrawer get() {
+        return instance;
     }
 
     public boolean isUpdated() {

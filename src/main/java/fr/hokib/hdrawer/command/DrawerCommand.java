@@ -2,7 +2,7 @@ package fr.hokib.hdrawer.command;
 
 import fr.hokib.hdrawer.HDrawer;
 import fr.hokib.hdrawer.config.drawer.DrawerConfig;
-import fr.hokib.hdrawer.database.logger.DatabaseLogger;
+import fr.hokib.hdrawer.logger.DrawerLogger;
 import fr.hokib.hdrawer.util.ColorUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -33,7 +33,7 @@ public class DrawerCommand implements CommandExecutor, TabCompleter {
 
         switch (args[0]) {
             case "reload" -> {
-                final DatabaseLogger logger = DatabaseLogger.start("Plugin reloaded");
+                final DrawerLogger logger = DrawerLogger.start("Plugin reloaded");
                 this.main.reload(false);
                 logger.stop();
                 sender.sendMessage(ColorUtil.color("&#FB3DF9P&#F13DF9l&#E63DFAu&#DC3DFAg&#D13CFBi&#C73CFBn &#BC3CFCr&#B23CFCe&#A73CFCl&#9D3CFDo&#923CFDa&#883BFEd&#7D3BFEe&#733BFFd &#683BFF!"));

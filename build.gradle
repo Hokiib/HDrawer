@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "fr.hokib"
-version = "1.2.0"
+version = "1.2.1"
 
 repositories {
     mavenCentral()
@@ -35,6 +35,9 @@ repositories {
 }
 
 dependencies {
+
+    implementation 'com.saicone.ezlib:ezlib:1.1'
+
     compileOnly "io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT"
     compileOnly "world.bentobox:bentobox:1.21.0-SNAPSHOT"
     compileOnly "com.bgsoftware:SuperiorSkyblockAPI:2023.3"

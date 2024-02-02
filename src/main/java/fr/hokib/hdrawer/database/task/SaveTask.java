@@ -1,7 +1,7 @@
 package fr.hokib.hdrawer.database.task;
 
 import fr.hokib.hdrawer.HDrawer;
-import fr.hokib.hdrawer.database.logger.DatabaseLogger;
+import fr.hokib.hdrawer.logger.DrawerLogger;
 import fr.hokib.hdrawer.task.AsyncTask;
 
 public class SaveTask extends AsyncTask {
@@ -24,7 +24,7 @@ public class SaveTask extends AsyncTask {
     }
 
     private void save() {
-        final DatabaseLogger logger = DatabaseLogger.start("Drawers saved !");
+        final DrawerLogger logger = DrawerLogger.start("Drawers saved !");
         this.main.getDatabase().save(this.main.getManager());
         logger.stop();
     }
