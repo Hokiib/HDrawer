@@ -32,16 +32,23 @@ repositories {
     maven {
         url = "https://ci.ender.zone/plugin/repository/everything/"
     }
+
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.26'
+    annotationProcessor 'org.projectlombok:lombok:1.18.26'
+
+    implementation 'com.saicone.ezlib:ezlib:1.1'
+
     compileOnly "io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT"
     compileOnly "world.bentobox:bentobox:1.21.0-SNAPSHOT"
     compileOnly "com.bgsoftware:SuperiorSkyblockAPI:2023.3"
     compileOnly "com.massivecraft:Factions:1.6.9.5-U0.6.21"
 
-    implementation("org.mongodb:mongodb-driver-sync:4.9.1")
-    implementation("com.zaxxer:HikariCP:5.0.1")
+    compileOnly("org.mongodb:mongodb-driver-sync:4.9.1")
+    compileOnly("com.zaxxer:HikariCP:5.1.0")
 }
 
 def targetJavaVersion = 17
@@ -73,5 +80,9 @@ processResources {
 
 shadowJar {
     destinationDirectory.set(file("out"))
+    relocate 'com.saicone.ezlib', project.group + '.hdrawer.lib.ezlib'
+    relocate 'com.mongodb', project.group + '.hdrawer.lib.mongodb'
+    relocate 'com.zaxxer.hikari', project.group + '.hdrawer.lib.hikari'
     archiveName = "${project.name}-${project.version}.jar"
+    minimize()
 }
