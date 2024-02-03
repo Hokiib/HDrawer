@@ -139,8 +139,6 @@ public abstract class DrawerStorage {
 
     public void setContent(final List<ItemStack> content) {
         this.content = content;
-        for (int i = 0; i < this.content.size(); i++) {
-            this.update(this.content.get(i), i);
-        }
+        this.update();
     }
 }

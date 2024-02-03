@@ -1,4 +1,4 @@
-package fr.hokib.hdrawer.util.update;
+package fr.hokib.hdrawer.util.version;
 
 public class ComparableVersion implements Comparable<ComparableVersion> {
     private final String[] parts;

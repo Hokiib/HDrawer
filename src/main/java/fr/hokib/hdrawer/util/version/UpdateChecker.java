@@ -1,4 +1,4 @@
-package fr.hokib.hdrawer.util.update;
+package fr.hokib.hdrawer.util.version;
 
 import fr.hokib.hdrawer.HDrawer;
 import org.bukkit.Bukkit;
@@ -20,7 +20,7 @@ public class UpdateChecker {
                 if (scanner.hasNext()) {
                     consumer.accept(scanner.next());
                 }
-            } catch (IOException ignored) {}
+            } catch (final IOException ignored) {}
         });
     }
 }

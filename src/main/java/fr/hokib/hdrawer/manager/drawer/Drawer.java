@@ -9,7 +9,7 @@ import fr.hokib.hdrawer.util.NumberUtil;
 import fr.hokib.hdrawer.util.location.BorderTuple;
 import fr.hokib.hdrawer.util.location.DisplayAttributes;
 import fr.hokib.hdrawer.util.location.LocationUtil;
-import fr.hokib.hdrawer.util.update.Version;
+import fr.hokib.hdrawer.util.version.Version;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -108,6 +108,7 @@ public class Drawer extends DrawerStorage {
 
                 itemDisplay.setItemDisplayTransform(ItemDisplay.ItemDisplayTransform.GUI);
                 itemDisplay.setInvulnerable(true);
+                itemDisplay.setPersistent(false);
                 itemDisplay.setViewRange(config.getDistance());
                 itemDisplay.teleport(itemLocation);
             }).getUniqueId());
@@ -124,6 +125,7 @@ public class Drawer extends DrawerStorage {
                 textDisplay.setTransformation(transformation);
 
                 textDisplay.setInvulnerable(true);
+                textDisplay.setPersistent(false);
                 textDisplay.setBackgroundColor(Color.fromARGB(0, 0, 0, 0));
                 textDisplay.setViewRange(config.getDistance());
                 textDisplay.teleport(textLocation);
@@ -154,6 +156,7 @@ public class Drawer extends DrawerStorage {
                     border.setItemStack(borderStack);
                     border.setViewRange(config.getDistance());
                     border.setItemDisplayTransform(ItemDisplay.ItemDisplayTransform.FIXED);
+                    border.setPersistent(false);
                     border.setInvulnerable(true);
                     border.teleport(location);
                 }).getUniqueId());

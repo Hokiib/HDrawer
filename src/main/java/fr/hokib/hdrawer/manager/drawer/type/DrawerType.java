@@ -4,7 +4,7 @@ import fr.hokib.hdrawer.util.location.DisplayAttributes;
 
 public enum DrawerType {
 
-    SOLO(new DisplayAttributes(0, 0, 0.6f)),
+    SOLO(new DisplayAttributes(0, 0.05f, 0.6f)),
     DUO(new DisplayAttributes(-0.225, 0, 0.4f), new DisplayAttributes(0.225, 0, 0.4f)),
     TRIO(new DisplayAttributes(0, 0.25, 0.35f),
             new DisplayAttributes(-0.25, -0.20, 0.35f),

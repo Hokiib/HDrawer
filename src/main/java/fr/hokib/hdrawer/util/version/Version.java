@@ -1,4 +1,4 @@
-package fr.hokib.hdrawer.util.update;
+package fr.hokib.hdrawer.util.version;
 
 import org.bukkit.Bukkit;
 

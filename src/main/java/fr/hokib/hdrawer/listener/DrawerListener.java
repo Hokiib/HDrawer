@@ -5,7 +5,7 @@ import fr.hokib.hdrawer.manager.DrawerManager;
 import fr.hokib.hdrawer.manager.drawer.Drawer;
 import fr.hokib.hdrawer.util.ColorUtil;
 import fr.hokib.hdrawer.util.location.LocationUtil;
-import fr.hokib.hdrawer.util.update.UpdateChecker;
+import fr.hokib.hdrawer.util.version.UpdateChecker;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
