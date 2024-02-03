@@ -67,9 +67,9 @@ public class LocationUtil {
         //BOTTOM
         borders.add(new BorderTuple(getOrientation(face, 0, -0.475, t), 2.0f, 0.1f));
         //LEFT
-        borders.add(new BorderTuple(getOrientation(face, -0.475, 0, t), 0.1f, 2.0f));
+        borders.add(new BorderTuple(getOrientation(face, -0.475, 0, t), 0.1f, 1.8f));
         //RIGHT
-        borders.add(new BorderTuple(getOrientation(face, 0.475, 0, t), 0.1f, 2.0f));
+        borders.add(new BorderTuple(getOrientation(face, 0.475, 0, t), 0.1f, 1.8f));
 
         return borders;
     }

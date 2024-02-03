@@ -32,7 +32,7 @@ public class HopperManager implements Runnable {
     @Override
     public void run() {
         for (final Drawer drawer : this.manager.getDrawers().values()) {
-            if (!drawer.getLocation().isChunkLoaded()) continue;
+            if (!drawer.getLocation().getChunk().isLoaded()) continue;
 
             final Optional<Hopper> bottom = this.getBottom(drawer);
             bottom.ifPresent(hopper -> this.transit(drawer, hopper));
