@@ -115,8 +115,14 @@ public final class HDrawer extends JavaPlugin {
             this.database = DatabaseType.from(databaseConfig.type());
 
             final DrawerLogger logger = DrawerLogger.start("Database loaded");
-            this.database.load(databaseConfig);
-            logger.stop();
+            try {
+                this.database.load(databaseConfig);
+                logger.stop();
+            } catch (final Exception e) {
+                e.printStackTrace();
+                this.database = null;
+                Bukkit.getPluginManager().disablePlugin(this);
+            }
         });
     }
 

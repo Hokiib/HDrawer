@@ -11,12 +11,9 @@ import java.text.MessageFormat;
 public abstract class LibraryLoader {
     private static final String DOT_ALIAS = "{}";
     private static final String PACKAGE_ALIAS = "{package}";
-
-    private final JavaPlugin plugin;
     private final Ezlib ezlib;
 
-    protected LibraryLoader(JavaPlugin plugin) {
-        this.plugin = plugin;
+    protected LibraryLoader(final JavaPlugin plugin) {
         this.ezlib = new Ezlib(new File(plugin.getDataFolder(), "libs")) {
             // Support for msg library
             @Override

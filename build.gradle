@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "fr.hokib"
-version = "1.2.3"
+version = "1.2.4"
 
 repositories {
     mavenCentral()
@@ -78,5 +78,9 @@ processResources {
 
 shadowJar {
     destinationDirectory.set(file("out"))
+    relocate 'com.saicone.ezlib', project.group + '.hdrawer.lib.ezlib'
+    relocate 'com.mongodb', project.group + '.hdrawer.lib.mongodb'
+    relocate 'com.zaxxer.hikari', project.group + '.hdrawer.lib.hikari'
     archiveName = "${project.name}-${project.version}.jar"
+    minimize()
 }
