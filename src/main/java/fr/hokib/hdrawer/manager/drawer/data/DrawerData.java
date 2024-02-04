@@ -23,7 +23,7 @@ public record DrawerData(String content, String id, String location, BlockFace f
         if (config == null) return null;
 
         final Location location = LocationUtil.convert(this.location);
-        if(location == null || location.getWorld() == null) return null;
+        if (location == null || location.getWorld() == null) return null;
 
         final Drawer drawer = new Drawer();
         drawer.setId(this.id);

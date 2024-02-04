@@ -57,6 +57,7 @@ public class Config {
     public boolean isToggleBorder() {
         return this.toggleBorder;
     }
+
     public float getDistance() {
         return this.distance;
     }

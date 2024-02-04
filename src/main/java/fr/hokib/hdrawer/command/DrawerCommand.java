@@ -4,6 +4,7 @@ import fr.hokib.hdrawer.HDrawer;
 import fr.hokib.hdrawer.config.drawer.DrawerConfig;
 import fr.hokib.hdrawer.logger.DrawerLogger;
 import fr.hokib.hdrawer.util.ColorUtil;
+import fr.hokib.hdrawer.util.version.AutoUpdater;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -14,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -75,6 +77,34 @@ public class DrawerCommand implements CommandExecutor, TabCompleter {
                 }
                 sender.sendMessage("§aSuccessfully gived a drawer to §f" + target.getName() + " §a!");
             }
+            case "update" -> {
+                if (main.isUpdated()) {
+                    sender.sendMessage("§cThere is no update available");
+                    return false;
+                }
+
+
+                AutoUpdater updater = new AutoUpdater(main, 114799, main.mainFile, AutoUpdater.UpdateType.CHECK_DOWNLOAD, true);
+                switch (updater.getResult()) {
+                    case NO_UPDATE -> {
+                        sender.sendMessage("§cThere is no update available");
+                    }
+                    case SUCCESS -> {
+                        sender.sendMessage("§aAn Updated was found, start downloading...");
+                        Bukkit.getScheduler().runTaskLater(main, () -> {
+                            sender.sendMessage("§aUpdate downloaded, now updating...");
+                            sender.sendMessage("§aSuccessfully updated, now restart for apply update !");
+                            main.setUpdated(true);
+                        }, 60);
+
+                    }
+
+                    default -> {
+                        sender.sendMessage("§cSomething went wrong ! Please restart and retry.");
+                    }
+                }
+
+            }
             default -> {
                 return this.sendHelp(sender);
             }
@@ -85,12 +115,17 @@ public class DrawerCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (args.length == 1) return List.of("reload", "save", "give", "help");
-
-        if (args.length >= 2 && args[0].equals("give")) {
-            if (args.length == 2) return this.main.getConfiguration().getDrawersId();
-            if (args.length == 3) return null;
+        ArrayList<String> toReturn;
+        if (args.length == 1) {
+            if (!main.isUpdated()) return List.of("reload", "save", "give", "help", "update");
+            return List.of("reload", "save", "give", "help");
         }
+        if (!main.isUpdated())
+
+            if (args.length >= 2 && args[0].equals("give")) {
+                if (args.length == 2) return this.main.getConfiguration().getDrawersId();
+                if (args.length == 3) return null;
+            }
 
         return Collections.emptyList();
     }
@@ -102,6 +137,7 @@ public class DrawerCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage("§8/§ddrawer §9reload");
         sender.sendMessage("§8/§ddrawer §9save");
         sender.sendMessage("§8/§ddrawer §9give §8<§9id§8> §8(§9player§8)");
+        sender.sendMessage("§8/§ddrawer §9update");
         sender.sendMessage(" ");
         sender.sendMessage(ColorUtil.color("&#E350EAA &#DE4DEBp&#D94BECl&#D348EEu&#CE45EFg&#C942F0i&#C440F1n &#BE3DF3m&#B93AF4a&#B438F5d&#AF35F6e &#A932F8b&#A430F9y &#9F2DFAH&#9A2AFBo&#9427FDk&#8F25FEi&#8A22FFb"));
         sender.sendMessage(" ");
