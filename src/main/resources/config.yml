@@ -30,6 +30,9 @@ database:
 #  - %DRAWER% offer you the possibility to include any drawer item in crafting (example : %basic%)
 #
 
+auto-update:
+  time-between-checks: 10800 #seconds - Default 10800 = 3Hours
+
 drawer-visibility: 25
 toggle-border: true
 shulker-mod: true

@@ -11,12 +11,14 @@ import fr.hokib.hdrawer.listener.DrawerListener;
 import fr.hokib.hdrawer.logger.DrawerLogger;
 import fr.hokib.hdrawer.manager.DrawerManager;
 import fr.hokib.hdrawer.manager.hopper.HopperManager;
+import fr.hokib.hdrawer.util.version.AutoUpdater;
 import fr.hokib.hdrawer.util.version.ComparableVersion;
-import fr.hokib.hdrawer.util.version.UpdateChecker;
 import fr.hokib.hdrawer.util.version.Version;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
 
 public final class HDrawer extends JavaPlugin {
 
@@ -26,6 +28,14 @@ public final class HDrawer extends JavaPlugin {
     private SaveTask saveTask;
     private DrawerManager manager;
     private boolean updated = true;
+
+    public void setUpdated(boolean updated) {
+        this.updated = updated;
+    }
+
+    public  File mainFile = this.getFile();
+    public AutoUpdater updater ;
+
 
     public static HDrawer get() {
         return instance;
@@ -38,9 +48,11 @@ public final class HDrawer extends JavaPlugin {
         new HDrawerDeps(this).load();
     }
 
+
     @Override
     public void onEnable() {
         final Version serverVersion = Version.getCurrentVersion();
+        this.saveDefaultConfig();
 
         if (serverVersion.isOlderThan(Version.V1_19_4)) {
             this.getLogger().warning("Incompatible version ! (Install 1.19.4 -> 1.20.x)");
@@ -48,16 +60,17 @@ public final class HDrawer extends JavaPlugin {
             return;
         }
 
+        Bukkit.getScheduler().runTaskTimer(this, () -> {
+            updater = new AutoUpdater(this, 114799, this.getFile(), AutoUpdater.UpdateType.VERSION_CHECK, true);
+            if (updater.getResult().equals(AutoUpdater.Result.UPDATE_FOUND)){
+                Bukkit.getOnlinePlayers().forEach(DrawerListener::sendUpdateInformation);
+                updated = false;
+            }
+        }, 0, this.getConfig().getInt("auto-update.time-between-checks")* 20L);
+
         this.getLogger().info("Using " + serverVersion.name());
 
-        //Plugin version
-        UpdateChecker.getVersion(version -> {
-            final ComparableVersion current = new ComparableVersion(this.getDescription().getVersion());
-            final ComparableVersion resource = new ComparableVersion(version);
-            final int compared = current.compareTo(resource);
 
-            this.updated = compared > 0 || compared == 0;
-        });
 
         this.reload(true);
 
@@ -74,6 +87,9 @@ public final class HDrawer extends JavaPlugin {
         command.setTabCompleter(drawerCommand);
 
         Bukkit.getPluginManager().registerEvents(new DrawerListener(this), this);
+
+
+
     }
 
     public void reload(final boolean enabling) {
@@ -82,7 +98,6 @@ public final class HDrawer extends JavaPlugin {
             this.config = new Config();
         }
 
-        this.saveDefaultConfig();
         this.reloadConfig();
         this.config.reload(this.getConfig());
 

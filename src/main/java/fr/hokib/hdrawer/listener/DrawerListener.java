@@ -5,7 +5,10 @@ import fr.hokib.hdrawer.manager.DrawerManager;
 import fr.hokib.hdrawer.manager.drawer.Drawer;
 import fr.hokib.hdrawer.util.ColorUtil;
 import fr.hokib.hdrawer.util.location.LocationUtil;
-import fr.hokib.hdrawer.util.version.UpdateChecker;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -24,34 +27,52 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.util.RayTraceResult;
 
+import java.awt.*;
 import java.util.*;
 
 public class DrawerListener implements Listener {
 
     private final DrawerManager manager;
-    private final Set<UUID> updateInfoSent = new HashSet<>();
     private final Set<Location> toClear = new HashSet<>();
     private final Map<UUID, Long> lastLeftClick = new HashMap<>();
 
+    public static HDrawer main;
+
     public DrawerListener(final HDrawer main) {
         this.manager = main.getManager();
+        this.main = main;
     }
 
     @EventHandler
     private void onJoin(PlayerJoinEvent event) {
         final Player player = event.getPlayer();
-        if (!player.isOp() || HDrawer.get().isUpdated()) return;
 
-        final UUID uuid = player.getUniqueId();
-        if (this.updateInfoSent.contains(uuid)) return;
+        sendUpdateInformation(player);
+
+    }
+
+
+    public static void sendUpdateInformation(Player player){
+        if (!player.isOp() || HDrawer.get().isUpdated()) return;
 
         player.sendMessage(ColorUtil.color("§8------ &#E747FBH&#D042FCD&#B83DFCr&#A138FDa&#8A33FEw&#722EFEe&#5B29FFr§8 ------"));
         player.sendMessage("§r");
-        player.sendMessage("§8A new §bupdate §7is available !");
+        player.sendMessage("§7A new §bupdate §7is available ! §8(Version: §b" + main.updater.getVersion() + "§8)");
         player.sendMessage("§r");
-        player.sendMessage("§8§l» §d" + UpdateChecker.RESOURCE_URL);
+        TextComponent spigotLink = new net.md_5.bungee.api.chat.TextComponent("§8§l» §dSpigot Link");
+        spigotLink.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.spigotmc.org/resources/hdrawer.114799/"));
+
+        player.spigot().sendMessage(spigotLink);
+
+        TextComponent autoUpdate = new net.md_5.bungee.api.chat.TextComponent("§8§l» §dAutomatic update");
+        autoUpdate.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/hdrawer update"));
+        autoUpdate.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText("§b/hdrawer update")));
+
+        player.spigot().sendMessage(autoUpdate);
+
+        player.sendMessage("§r");
         player.sendMessage("§8--------------------");
-        this.updateInfoSent.add(uuid);
+
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

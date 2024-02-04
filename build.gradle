@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "fr.hokib"
-version = "1.2.4"
+version = "1.2.3"
 
 repositories {
     mavenCentral()
@@ -77,7 +77,7 @@ processResources {
 }
 
 shadowJar {
-    destinationDirectory.set(file("out"))
+    destinationDirectory.set(file("E:\\Servers\\1.19.4\\plugins"))
     relocate 'com.saicone.ezlib', project.group + '.hdrawer.lib.ezlib'
     relocate 'com.mongodb', project.group + '.hdrawer.lib.mongodb'
     relocate 'com.zaxxer.hikari', project.group + '.hdrawer.lib.hikari'
