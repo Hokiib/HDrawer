@@ -176,7 +176,7 @@ public class DrawerManager {
         return this.drawers.get(LocationUtil.convert(location));
     }
 
-    public Drawer getDrawer(final String location){
+    public Drawer getDrawer(final String location) {
         return this.drawers.get(location);
     }
 

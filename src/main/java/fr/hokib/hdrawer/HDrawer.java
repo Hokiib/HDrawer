@@ -12,7 +12,6 @@ import fr.hokib.hdrawer.logger.DrawerLogger;
 import fr.hokib.hdrawer.manager.DrawerManager;
 import fr.hokib.hdrawer.manager.hopper.HopperManager;
 import fr.hokib.hdrawer.util.version.AutoUpdater;
-import fr.hokib.hdrawer.util.version.ComparableVersion;
 import fr.hokib.hdrawer.util.version.Version;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
@@ -23,19 +22,13 @@ import java.io.File;
 public final class HDrawer extends JavaPlugin {
 
     private static HDrawer instance;
+    public File mainFile = this.getFile();
+    public AutoUpdater updater;
     private Config config;
     private Database database;
     private SaveTask saveTask;
     private DrawerManager manager;
     private boolean updated = true;
-
-    public void setUpdated(boolean updated) {
-        this.updated = updated;
-    }
-
-    public  File mainFile = this.getFile();
-    public AutoUpdater updater ;
-
 
     public static HDrawer get() {
         return instance;
@@ -47,7 +40,6 @@ public final class HDrawer extends JavaPlugin {
 
         new HDrawerDeps(this).load();
     }
-
 
     @Override
     public void onEnable() {
@@ -62,14 +54,13 @@ public final class HDrawer extends JavaPlugin {
 
         Bukkit.getScheduler().runTaskTimer(this, () -> {
             updater = new AutoUpdater(this, 114799, this.getFile(), AutoUpdater.UpdateType.VERSION_CHECK, true);
-            if (updater.getResult().equals(AutoUpdater.Result.UPDATE_FOUND)){
+            if (updater.getResult().equals(AutoUpdater.Result.UPDATE_FOUND)) {
                 Bukkit.getOnlinePlayers().forEach(DrawerListener::sendUpdateInformation);
                 updated = false;
             }
-        }, 0, this.getConfig().getInt("auto-update.time-between-checks")* 20L);
+        }, 0, this.getConfig().getInt("auto-update.time-between-checks") * 20L);
 
         this.getLogger().info("Using " + serverVersion.name());
-
 
 
         this.reload(true);
@@ -87,7 +78,6 @@ public final class HDrawer extends JavaPlugin {
         command.setTabCompleter(drawerCommand);
 
         Bukkit.getPluginManager().registerEvents(new DrawerListener(this), this);
-
 
 
     }
@@ -154,6 +144,10 @@ public final class HDrawer extends JavaPlugin {
 
     public boolean isUpdated() {
         return this.updated;
+    }
+
+    public void setUpdated(boolean updated) {
+        this.updated = updated;
     }
 
     public DrawerManager getManager() {

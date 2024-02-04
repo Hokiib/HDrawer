@@ -24,7 +24,8 @@ public enum Version {
 
                 return valueOf("V" + versionNumber.replace(".", "_"));
             }
-        } catch (IllegalArgumentException ignored){}
+        } catch (IllegalArgumentException ignored) {
+        }
 
         return NONE;
     }

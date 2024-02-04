@@ -12,7 +12,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -79,14 +78,14 @@ public class DrawerCommand implements CommandExecutor, TabCompleter {
                 sender.sendMessage("§aSuccessfully gived a drawer to §f" + target.getName() + " §a!");
             }
             case "update" -> {
-                if(main.isUpdated()){
+                if (main.isUpdated()) {
                     sender.sendMessage("§cThere is no update available");
                     return false;
                 }
 
 
                 AutoUpdater updater = new AutoUpdater(main, 114799, main.mainFile, AutoUpdater.UpdateType.CHECK_DOWNLOAD, true);
-                switch (updater.getResult()){
+                switch (updater.getResult()) {
                     case NO_UPDATE -> {
                         sender.sendMessage("§cThere is no update available");
                     }
@@ -123,10 +122,10 @@ public class DrawerCommand implements CommandExecutor, TabCompleter {
         }
         if (!main.isUpdated())
 
-        if (args.length >= 2 && args[0].equals("give")) {
-            if (args.length == 2) return this.main.getConfiguration().getDrawersId();
-            if (args.length == 3) return null;
-        }
+            if (args.length >= 2 && args[0].equals("give")) {
+                if (args.length == 2) return this.main.getConfiguration().getDrawersId();
+                if (args.length == 3) return null;
+            }
 
         return Collections.emptyList();
     }

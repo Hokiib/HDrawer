@@ -8,7 +8,6 @@ import fr.hokib.hdrawer.util.location.LocationUtil;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -27,32 +26,21 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.util.RayTraceResult;
 
-import java.awt.*;
 import java.util.*;
 
 public class DrawerListener implements Listener {
 
+    public static HDrawer main;
     private final DrawerManager manager;
     private final Set<Location> toClear = new HashSet<>();
     private final Map<UUID, Long> lastLeftClick = new HashMap<>();
-
-    public static HDrawer main;
 
     public DrawerListener(final HDrawer main) {
         this.manager = main.getManager();
         this.main = main;
     }
 
-    @EventHandler
-    private void onJoin(PlayerJoinEvent event) {
-        final Player player = event.getPlayer();
-
-        sendUpdateInformation(player);
-
-    }
-
-
-    public static void sendUpdateInformation(Player player){
+    public static void sendUpdateInformation(Player player) {
         if (!player.isOp() || HDrawer.get().isUpdated()) return;
 
         player.sendMessage(ColorUtil.color("§8------ &#E747FBH&#D042FCD&#B83DFCr&#A138FDa&#8A33FEw&#722EFEe&#5B29FFr§8 ------"));
@@ -72,6 +60,14 @@ public class DrawerListener implements Listener {
 
         player.sendMessage("§r");
         player.sendMessage("§8--------------------");
+
+    }
+
+    @EventHandler
+    private void onJoin(PlayerJoinEvent event) {
+        final Player player = event.getPlayer();
+
+        sendUpdateInformation(player);
 
     }
 
