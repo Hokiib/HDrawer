@@ -37,6 +37,43 @@ shulker-mod: true
 blacklistedMaterials:
   - BARREL
 
+crafts:
+  planks:
+    - OAK_PLANKS
+    - SPRUCE_PLANKS
+    - BIRCH_PLANKS
+    - JUNGLE_PLANKS
+    - ACACIA_PLANKS
+    - DARK_OAK_PLANKS
+    - CRIMSON_PLANKS
+    - WARPED_PLANKS
+    - BAMBOO_PLANKS
+    - MANGROVE_PLANKS
+    - CHERRY_PLANKS
+  logs:
+    - OAK_LOG
+    - SPRUCE_LOG
+    - BIRCH_LOG
+    - JUNGLE_LOG
+    - ACACIA_LOG
+    - DARK_OAK_LOG
+    - CRIMSON_STEM
+    - WARPED_STEM
+    - BAMBOO_BLOCK
+    - MANGROVE_LOG
+    - CHERRY_LOG
+  stripped_logs:
+    - STRIPPED_OAK_LOG
+    - STRIPPED_SPRUCE_LOG
+    - STRIPPED_BIRCH_LOG
+    - STRIPPED_JUNGLE_LOG
+    - STRIPPED_ACACIA_LOG
+    - STRIPPED_DARK_OAK_LOG
+    - STRIPPED_CRIMSON_STEM
+    - STRIPPED_WARPED_STEM
+    - STRIPPED_MANGROVE_LOG
+    - STRIPPED_CHERRY_LOG
+
 drawers:
   basic:
     item:

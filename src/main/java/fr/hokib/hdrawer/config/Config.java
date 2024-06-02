@@ -10,6 +10,7 @@ import java.util.*;
 
 public class Config {
     private final Map<String, DrawerConfig> drawers = new HashMap<>();
+    public static final HashMap<String, List<Material>> crafts = new HashMap<>();
     private final Set<Material> blacklistedMaterials = new HashSet<>();
     private DatabaseConfig databaseConfig;
     private float distance;
@@ -30,13 +31,38 @@ public class Config {
             }
         }
 
+        final ConfigurationSection craftsItemsSection = config.getConfigurationSection("crafts");
+        if (craftsItemsSection == null) return;
+
+        for (final String id : craftsItemsSection.getKeys(false)) {
+            List<Material> materialsList = new ArrayList<>();
+            List<String> materialsStringList = craftsItemsSection.getStringList(id);
+
+            System.out.println("Processing category: " + id + " with materials: " + materialsStringList);
+
+            for (String material : materialsStringList) {
+                try {
+                    Material mat = Material.valueOf(material.toUpperCase().replace(" ", ""));
+                    if (!materialsList.contains(mat)) {
+                        materialsList.add(mat);
+                    }
+                } catch (IllegalArgumentException ignored) {
+                    System.out.println("Invalid material: " + material);
+                }
+            }
+
+            crafts.put(id, materialsList);
+            System.out.println("Added material choice: " + materialsList + " to " + id);
+        }
+
         final ConfigurationSection drawersSection = config.getConfigurationSection("drawers");
         if (drawersSection == null) return;
 
         this.drawers.clear();
-        for (final String id : drawersSection.getKeys(false)) {
-            final DrawerConfig drawerConfig = DrawerConfig.fromConfig(drawersSection.getConfigurationSection(id));
-            this.drawers.put(id, drawerConfig);
+        for (final String id2 : drawersSection.getKeys(false)) {
+            final DrawerConfig drawerConfig = DrawerConfig.fromConfig(drawersSection.getConfigurationSection(id2));
+            this.drawers.put(id2, drawerConfig);
+
         }
     }
 
@@ -68,6 +94,7 @@ public class Config {
     public DrawerConfig getDrawerConfig(final String id) {
         return this.drawers.get(id);
     }
+
 
     public List<String> getDrawersId() {
         return this.drawers.keySet().stream().toList();

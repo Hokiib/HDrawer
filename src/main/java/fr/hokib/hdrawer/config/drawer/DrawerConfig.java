@@ -1,6 +1,7 @@
 package fr.hokib.hdrawer.config.drawer;
 
 import fr.hokib.hdrawer.HDrawer;
+import fr.hokib.hdrawer.config.Config;
 import fr.hokib.hdrawer.manager.DrawerManager;
 import fr.hokib.hdrawer.util.ColorUtil;
 import org.bukkit.Material;
@@ -39,7 +40,7 @@ public record DrawerConfig(String id, ItemStack drawer, Material borderMaterial,
 
         final Material borderMaterial = getByPath(section, "border-material", Material.STRIPPED_OAK_WOOD);
 
-        //Between 1 and 4
+        // Between 1 and 4
         final int limit = section.getInt("limit");
         final int slot = Math.max(1, Math.min(section.getInt("slot"), 4));
 
@@ -53,8 +54,13 @@ public record DrawerConfig(String id, ItemStack drawer, Material borderMaterial,
             final char symbol = symbols[i];
             final String ingredient = ingredients.get(i);
             try {
-                final Material ingredientType = Material.valueOf(ingredient.toUpperCase());
-                recipe.setIngredient(symbol, ingredientType);
+                if (Config.crafts.containsKey(ingredient.toLowerCase())) {
+                    recipe.setIngredient(symbol, new RecipeChoice.MaterialChoice(Config.crafts.get(ingredient.toLowerCase())));
+                    System.out.println("Added material choice: " + Config.crafts.get(ingredient.toLowerCase()) + " to " + id);
+                } else {
+                    final Material ingredientType = Material.valueOf(ingredient.toUpperCase());
+                    recipe.setIngredient(symbol, ingredientType);
+                }
             } catch (IllegalArgumentException ignored) {
                 if (ingredient.startsWith("%") && ingredient.endsWith("%")) {
                     final String drawerId = ingredient.replace("%", "");
@@ -74,6 +80,7 @@ public record DrawerConfig(String id, ItemStack drawer, Material borderMaterial,
 
         return new DrawerConfig(id, drawer, borderMaterial, limit, slot);
     }
+
 
     private static NamespacedKey getRecipe(final String id) {
         return new NamespacedKey(HDrawer.get(), RECIPE_ID + "-" + id);

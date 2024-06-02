@@ -34,6 +34,7 @@ public class DrawerManager {
     }
 
     public static String getId(final ItemStack itemStack) {
+        if (!itemStack.hasItemMeta()) return null;
         final PersistentDataContainer container = itemStack.getItemMeta().getPersistentDataContainer();
 
         return container.get(new NamespacedKey(HDrawer.get(), DRAWER_ID), PersistentDataType.STRING);
