@@ -30,6 +30,7 @@ database:
 #  - %DRAWER% offer you the possibility to include any drawer item in crafting (example : %basic%)
 #
 
+format-with-k&m: true
 drawer-visibility: 25
 toggle-border: true
 shulker-mod: true

@@ -14,12 +14,14 @@ public class Config {
     private final Set<Material> blacklistedMaterials = new HashSet<>();
     private DatabaseConfig databaseConfig;
     private float distance;
+    private Boolean format_km;
     private boolean shulkerMod;
     private boolean toggleBorder;
 
     public void reload(FileConfiguration config) {
         this.databaseConfig = DatabaseConfig.fromConfig(config.getConfigurationSection("database"));
 
+        this.format_km = config.getBoolean("format-with-k&m", true);
         this.distance = (float) (config.getDouble("drawer-visibility") / 50);
         this.shulkerMod = config.getBoolean("shulker-mod", false);
         this.toggleBorder = config.getBoolean("toggle-border", false);
@@ -85,6 +87,10 @@ public class Config {
     }
     public float getDistance() {
         return this.distance;
+    }
+
+    public Boolean getFormat_km() {
+        return this.format_km;
     }
 
     public boolean isBlacklisted(final Material material) {
