@@ -28,7 +28,7 @@ public enum AccessAPI {
                     for (final String pluginName : value.getPlugins()) {
                         if (name.equals(pluginName)) {
                             HDrawer.get().getLogger().info("We've found a compatible dependency (" + name + ")");
-                            return value.accessClass.newInstance();
+                            return value.accessClass.getConstructor().newInstance();
                         }
                     }
                 }
