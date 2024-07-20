@@ -38,7 +38,8 @@ public final class HDrawer extends JavaPlugin {
         new HDrawerDeps(this).load();
     }
 
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public void onEnable() {
         final Version serverVersion = Version.getCurrentVersion();
 

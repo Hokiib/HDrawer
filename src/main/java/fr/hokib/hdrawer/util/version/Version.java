@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 public enum Version {
     NONE,
     V1_19_4,
-    V1_20, V1_20_1, V1_20_2, V1_20_3, V1_20_4, V1_20_6;
+    V1_20, V1_20_1, V1_20_2, V1_20_3, V1_20_4, V1_20_6, V1_21;
 
     public static final String REGEX = "MC: (\\d+\\.\\d+(\\.\\d+)?)";
 
