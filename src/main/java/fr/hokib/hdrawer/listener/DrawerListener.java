@@ -224,6 +224,7 @@ public class DrawerListener implements Listener {
 
                 event.setCancelled(removed);
             }
+            default -> {}
         }
     }
 }

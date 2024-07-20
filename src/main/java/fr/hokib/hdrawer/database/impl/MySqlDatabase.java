@@ -130,7 +130,12 @@ public class MySqlDatabase implements Database {
 
         for (int i = 0; i < unsaved.size(); i++) {
             final String location = unsaved.get(i);
-            final DrawerData data = DrawerData.from(manager.getDrawer(location));
+            Drawer drawer = manager.getDrawer(location);
+            if(drawer == null) {
+            	HDrawer.get().getLogger().severe("Failed to save drawer at " + location + " : unable to get it.");
+            	continue;
+            }
+            final DrawerData data = DrawerData.from(drawer);
 
             builder.append("('" + data.id() + "', '" + location + "', '" + data.face() + "', '" + data.content() + "')");
 

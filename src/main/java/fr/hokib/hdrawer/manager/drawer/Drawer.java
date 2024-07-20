@@ -59,7 +59,8 @@ public class Drawer extends DrawerStorage {
         this.borders.clear();
     }
 
-    public void build() {
+    @SuppressWarnings("deprecation")
+	public void build() {
         this.texts.clear();
         this.items.clear();
         this.borders.clear();
@@ -164,7 +165,8 @@ public class Drawer extends DrawerStorage {
         }
     }
 
-    @Override
+    @SuppressWarnings("deprecation")
+	@Override
     public void update(ItemStack itemStack, final int index) {
         if (itemStack.getType().isAir()) itemStack = null;
 

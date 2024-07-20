@@ -31,7 +31,7 @@ public enum DatabaseType {
         }
 
         try {
-            return databaseType.databaseClass.newInstance();
+            return databaseType.databaseClass.getConstructor().newInstance();
         } catch (Exception e) {
             e.printStackTrace();
         }
