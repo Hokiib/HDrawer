@@ -18,3 +18,4 @@ Free to you to make issues to suggest new features
 
 Thanks to :
 - [@jj136975](https://github.com/jj136975) (jar size optimization)
+- [@Elikill58](https://github.com/Elikill58) (1.21 version)
