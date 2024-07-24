@@ -98,6 +98,6 @@ public class JsonDatabase implements Database {
     }
 
     private Path getPath() {
-        return Path.of(HDrawer.get().getDataFolder().getPath(), FOLDER);
+        return Path.of(HDrawer.get().getDataFolder().getPath(), getConfig().tableName());
     }
 }

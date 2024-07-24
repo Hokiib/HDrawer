@@ -78,14 +78,10 @@ public class DrawerManager {
     public boolean remove(final Location location) {
         final String stringLocation = LocationUtil.convert(location);
         final Drawer drawer = this.drawers.remove(stringLocation);
-        if (drawer == null) {
-        	HDrawer.get().getLogger().warning("Drawer not found : " + stringLocation);
-        	return false;
-        }
+        if (drawer == null) return false;
 
         this.deleted.add(stringLocation);
         this.unsaved.remove(stringLocation);
-    	HDrawer.get().getLogger().warning("drawer removing, deleted: " + String.join(", ", deleted) + ", unsaved: " + String.join(", ", unsaved));
 
         final DrawerConfig config = HDrawer.get().getConfiguration().getDrawerConfig(drawer.getId());
         final ItemStack toDrop = config.drawer().clone();
