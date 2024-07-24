@@ -1,5 +1,9 @@
 package fr.hokib.hdrawer;
 
+import org.bukkit.Bukkit;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.plugin.java.JavaPlugin;
+
 import fr.hokib.hdrawer.command.DrawerCommand;
 import fr.hokib.hdrawer.config.Config;
 import fr.hokib.hdrawer.config.database.DatabaseConfig;
@@ -11,12 +15,13 @@ import fr.hokib.hdrawer.listener.DrawerListener;
 import fr.hokib.hdrawer.logger.DrawerLogger;
 import fr.hokib.hdrawer.manager.DrawerManager;
 import fr.hokib.hdrawer.manager.hopper.HopperManager;
+import fr.hokib.hdrawer.scheduler.Scheduler;
+import fr.hokib.hdrawer.scheduler.hook.FoliaScheduler;
+import fr.hokib.hdrawer.scheduler.hook.SpigotScheduler;
+import fr.hokib.hdrawer.util.ReflectionUtils;
 import fr.hokib.hdrawer.util.version.ComparableVersion;
 import fr.hokib.hdrawer.util.version.UpdateChecker;
 import fr.hokib.hdrawer.util.version.Version;
-import org.bukkit.Bukkit;
-import org.bukkit.command.PluginCommand;
-import org.bukkit.plugin.java.JavaPlugin;
 
 public final class HDrawer extends JavaPlugin {
 
@@ -26,6 +31,7 @@ public final class HDrawer extends JavaPlugin {
     private SaveTask saveTask;
     private DrawerManager manager;
     private boolean updated = true;
+    private Scheduler scheduler;
 
     public static HDrawer get() {
         return instance;
@@ -48,8 +54,10 @@ public final class HDrawer extends JavaPlugin {
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
-
-        this.getLogger().info("Using " + serverVersion.name());
+        boolean isFolia = ReflectionUtils.isClassExist("io.papermc.paper.threadedregions.RegionizedServer");
+        this.scheduler = isFolia ? new FoliaScheduler(this) : new SpigotScheduler(this);
+        
+        this.getLogger().info("Using " + serverVersion.name() + (isFolia ? " with folia support" : ""));
 
         //Plugin version
         UpdateChecker.getVersion(version -> {
@@ -67,7 +75,7 @@ public final class HDrawer extends JavaPlugin {
         this.loadDatabase();
 
         //3item/s so 0,33 * 20L = 6,6
-        Bukkit.getScheduler().runTaskTimer(this, new HopperManager(this), 0, 7L);
+        getScheduler().runRepeating(new HopperManager(this), 7);
 
         final DrawerCommand drawerCommand = new DrawerCommand(this);
         final PluginCommand command = this.getCommand("drawer");
@@ -96,7 +104,7 @@ public final class HDrawer extends JavaPlugin {
 
             //Unload database
             if (!DatabaseType.equals(databaseConfig.type(), this.database)) {
-                Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
+            	getScheduler().runAsync(() -> {
                     this.database.save(this.manager);
                     this.database.unload();
                     this.manager.getDrawers().clear();
@@ -111,7 +119,7 @@ public final class HDrawer extends JavaPlugin {
     }
 
     private void loadDatabase() {
-        Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
+    	getScheduler().runAsync(() -> {
             final DatabaseConfig databaseConfig = this.config.getDatabaseConfig();
             this.database = DatabaseType.from(databaseConfig.type());
 
@@ -153,4 +161,8 @@ public final class HDrawer extends JavaPlugin {
     public Config getConfiguration() {
         return this.config;
     }
+    
+    public Scheduler getScheduler() {
+		return scheduler;
+	}
 }
