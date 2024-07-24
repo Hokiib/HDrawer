@@ -4,6 +4,7 @@ main: fr.hokib.hdrawer.HDrawer
 authors: [ Hokib ]
 website: https://hokib.com
 api-version: '1.13'
+folia-supported: true
 softdepend:
   - SuperiorSkyblock2
   - BentoBox

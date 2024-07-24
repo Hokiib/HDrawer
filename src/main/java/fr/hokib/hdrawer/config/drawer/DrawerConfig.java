@@ -20,7 +20,8 @@ public record DrawerConfig(String id, ItemStack drawer, Material borderMaterial,
     private static final String RECIPE_ID = "drawer-recipe";
     private static final char[] symbols = new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'};
 
-    public static DrawerConfig fromConfig(final ConfigurationSection section) {
+    @SuppressWarnings("deprecation")
+	public static DrawerConfig fromConfig(final ConfigurationSection section) {
         final String id = section.getName();
 
         final ConfigurationSection itemSection = section.getConfigurationSection("item");

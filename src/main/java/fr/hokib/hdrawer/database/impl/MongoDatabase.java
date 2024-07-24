@@ -111,11 +111,11 @@ public class MongoDatabase implements Database {
     private MongoCollection<DrawerData> createCollectionIfNotExist(final com.mongodb.client.MongoDatabase database) {
         if (database == null) return null;
 
-        if (!database.listCollectionNames().into(new ArrayList<>()).contains(FOLDER)) {
-            database.createCollection(FOLDER);
+        if (!database.listCollectionNames().into(new ArrayList<>()).contains(getConfig().tableName())) {
+            database.createCollection(getConfig().tableName());
         }
 
-        return database.getCollection(FOLDER, DrawerData.class);
+        return database.getCollection(getConfig().tableName(), DrawerData.class);
     }
 
     private Bson getFilter(final String location) {

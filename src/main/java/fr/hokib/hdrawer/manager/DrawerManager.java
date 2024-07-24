@@ -133,7 +133,9 @@ public class DrawerManager {
     }
 
     public void save(final Location location) {
-        this.unsaved.add(LocationUtil.convert(location));
+    	String s = LocationUtil.convert(location);
+    	if(!this.unsaved.contains(s)) // prevent beeing added multiple times
+    		this.unsaved.add(s);
     }
 
     public void hideAll() {

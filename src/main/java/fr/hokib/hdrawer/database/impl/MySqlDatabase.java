@@ -20,11 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MySqlDatabase implements Database {
-    private static final String CREATE_TABLE = "CREATE TABLE IF NOT EXISTS " + FOLDER + " (location VARCHAR(180), id VARCHAR(180), face VARCHAR(20), content LONGTEXT, PRIMARY KEY (location))";
-    private static final String LOAD_DRAWERS = "SELECT * FROM " + FOLDER;
-    private static final String DELETE_DRAWERS = "DELETE FROM " + FOLDER + " WHERE location IN (%locations%)";
-    private static final String SAVE_DRAWERS = "INSERT INTO " + FOLDER + " (id, location, face, content) " +
-            "VALUES %values% ON DUPLICATE KEY UPDATE id=VALUES(id), location=VALUES(location), face=VALUES(face), content=VALUES(content)";
+	
     private HikariDataSource database;
 
     @Override
@@ -34,7 +30,7 @@ public class MySqlDatabase implements Database {
         final Map<String, Drawer> drawers = new HashMap<>();
 
         try (final Connection connection = this.database.getConnection()) {
-            final PreparedStatement ps = connection.prepareStatement(LOAD_DRAWERS);
+            final PreparedStatement ps = connection.prepareStatement("SELECT * FROM " + config.tableName());
             final ResultSet resultSet = ps.executeQuery();
 
             while (resultSet.next()) {
@@ -67,14 +63,11 @@ public class MySqlDatabase implements Database {
             }
 
             if (!locations.isEmpty()) {
-                final PreparedStatement deleteStatement = connection.prepareStatement(DELETE_DRAWERS.replaceFirst("%locations%", this.convertLocations(locations)));
-                deleteStatement.executeUpdate();
+                connection.prepareStatement("DELETE FROM " + getConfig().tableName() + " WHERE location IN (" + this.convertLocations(locations) + ")").executeUpdate();
             }
 
             if (!manager.getUnsaved().isEmpty()) {
-                final String saveSql = SAVE_DRAWERS.replaceFirst("%values%", this.convertData(manager.getUnsaved(), manager));
-                final PreparedStatement saveStatement = connection.prepareStatement(saveSql);
-                saveStatement.executeUpdate();
+            	connection.prepareStatement("INSERT INTO " + getConfig().tableName() + " (id, location, face, content) VALUES " + this.convertData(manager.getUnsaved(), manager) + " ON DUPLICATE KEY UPDATE id=VALUES(id), location=VALUES(location), face=VALUES(face), content=VALUES(content)").executeUpdate();
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -104,7 +97,7 @@ public class MySqlDatabase implements Database {
 
     private void createTableIfNotExist() {
         try (final Connection connection = this.database.getConnection()) {
-            final PreparedStatement ps = connection.prepareStatement(CREATE_TABLE);
+            final PreparedStatement ps = connection.prepareStatement("CREATE TABLE IF NOT EXISTS " + getConfig().tableName() + " (location VARCHAR(180), id VARCHAR(180), face VARCHAR(20), content LONGTEXT, PRIMARY KEY (location))");
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

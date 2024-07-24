@@ -4,6 +4,7 @@ import fr.hokib.hdrawer.HDrawer;
 import fr.hokib.hdrawer.config.Config;
 import fr.hokib.hdrawer.manager.DrawerManager;
 import fr.hokib.hdrawer.manager.drawer.Drawer;
+import fr.hokib.hdrawer.scheduler.Scheduler;
 import fr.hokib.hdrawer.util.inventory.InventoryUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -32,12 +33,14 @@ public class HopperManager implements Runnable {
     @Override
     public void run() {
         for (final Drawer drawer : this.manager.getDrawers().values()) {
-            if (!drawer.getLocation().getChunk().isLoaded()) continue;
-
-            final Optional<Hopper> bottom = this.getBottom(drawer);
-            bottom.ifPresent(hopper -> this.transit(drawer, hopper));
-
-            this.transit(this.getSides(drawer), drawer);
+        	Scheduler.getScheduler().runInRegion(drawer.getLocation(), () -> {
+	            if (!drawer.getLocation().getChunk().isLoaded()) return;
+	
+	            final Optional<Hopper> bottom = this.getBottom(drawer);
+	            bottom.ifPresent(hopper -> this.transit(drawer, hopper));
+	
+	            this.transit(this.getSides(drawer), drawer);
+        	});
         }
     }
 

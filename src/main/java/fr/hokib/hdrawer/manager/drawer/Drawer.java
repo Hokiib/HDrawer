@@ -5,6 +5,7 @@ import fr.hokib.hdrawer.config.Config;
 import fr.hokib.hdrawer.config.drawer.DrawerConfig;
 import fr.hokib.hdrawer.manager.drawer.data.DrawerStorage;
 import fr.hokib.hdrawer.manager.drawer.type.DrawerType;
+import fr.hokib.hdrawer.scheduler.Scheduler;
 import fr.hokib.hdrawer.util.NumberUtil;
 import fr.hokib.hdrawer.util.location.BorderTuple;
 import fr.hokib.hdrawer.util.location.DisplayAttributes;
@@ -111,7 +112,7 @@ public class Drawer extends DrawerStorage {
                 itemDisplay.setInvulnerable(true);
                 itemDisplay.setPersistent(false);
                 itemDisplay.setViewRange(config.getDistance());
-                itemDisplay.teleport(itemLocation);
+                Scheduler.getScheduler().teleportEntity(itemDisplay, itemLocation);
             }).getUniqueId());
 
             //TextDisplay
@@ -129,7 +130,7 @@ public class Drawer extends DrawerStorage {
                 textDisplay.setPersistent(false);
                 textDisplay.setBackgroundColor(Color.fromARGB(0, 0, 0, 0));
                 textDisplay.setViewRange(config.getDistance());
-                textDisplay.teleport(textLocation);
+                Scheduler.getScheduler().teleportEntity(textDisplay, textLocation);
             }).getUniqueId());
 
             if (i < this.content.size()) {
@@ -159,7 +160,7 @@ public class Drawer extends DrawerStorage {
                     border.setItemDisplayTransform(ItemDisplay.ItemDisplayTransform.FIXED);
                     border.setPersistent(false);
                     border.setInvulnerable(true);
-                    border.teleport(location);
+                    Scheduler.getScheduler().teleportEntity(border, location);
                 }).getUniqueId());
             }
         }
