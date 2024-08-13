@@ -77,7 +77,8 @@ processResources {
 }
 
 shadowJar {
-    destinationDirectory.set(file("out"))
+    def pluginDir = System.getProperty('plugin.dir')
+    destinationDirectory.set(file(pluginDir == null ? "out" : pluginDir))
     relocate 'com.saicone.ezlib', project.group + '.hdrawer.lib.ezlib'
     relocate 'com.mongodb', project.group + '.hdrawer.lib.mongodb'
     relocate 'com.zaxxer.hikari', project.group + '.hdrawer.lib.hikari'

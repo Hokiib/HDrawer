@@ -1,13 +1,12 @@
 package fr.hokib.hdrawer.util.version;
 
-import fr.hokib.hdrawer.HDrawer;
-import org.bukkit.Bukkit;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Scanner;
 import java.util.function.Consumer;
+
+import fr.hokib.hdrawer.scheduler.Scheduler;
 
 public class UpdateChecker {
 
@@ -15,7 +14,7 @@ public class UpdateChecker {
     public static final String RESOURCE_URL = "https://www.spigotmc.org/resources/hdrawer." + RESOURCE_ID + "/";
 
     public static void getVersion(final Consumer<String> consumer) {
-        Bukkit.getScheduler().runTaskAsynchronously(HDrawer.get(), () -> {
+        Scheduler.getScheduler().runAsync(() -> {
             try (final InputStream is = new URL("https://api.spigotmc.org/legacy/update.php?resource=" + RESOURCE_ID + "/~").openStream(); Scanner scanner = new Scanner(is)) {
                 if (scanner.hasNext()) {
                     consumer.accept(scanner.next());

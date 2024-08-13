@@ -95,7 +95,8 @@ public class DrawerCommand implements CommandExecutor, TabCompleter {
         return Collections.emptyList();
     }
 
-    public boolean sendHelp(final CommandSender sender) {
+    @SuppressWarnings("deprecation")
+	public boolean sendHelp(final CommandSender sender) {
         sender.sendMessage(" ");
         sender.sendMessage(ColorUtil.color("§8------ &#E747FBH&#D042FCD&#B83DFCr&#A138FDa&#8A33FEw&#722EFEe&#5B29FFr§8 ------"));
         sender.sendMessage(" ");

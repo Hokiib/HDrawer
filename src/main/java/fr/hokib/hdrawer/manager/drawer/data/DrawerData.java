@@ -1,13 +1,14 @@
 package fr.hokib.hdrawer.manager.drawer.data;
 
+import org.bukkit.Location;
+import org.bukkit.block.BlockFace;
+
 import fr.hokib.hdrawer.HDrawer;
 import fr.hokib.hdrawer.config.drawer.DrawerConfig;
 import fr.hokib.hdrawer.manager.drawer.Drawer;
+import fr.hokib.hdrawer.scheduler.Scheduler;
 import fr.hokib.hdrawer.util.Base64ItemStack;
 import fr.hokib.hdrawer.util.location.LocationUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.block.BlockFace;
 
 public record DrawerData(String content, String id, String location, BlockFace face) {
 
@@ -30,7 +31,7 @@ public record DrawerData(String content, String id, String location, BlockFace f
         drawer.setLocation(location);
         drawer.setFace(this.face);
 
-        Bukkit.getScheduler().runTask(HDrawer.get(), () -> {
+        Scheduler.getScheduler().runInRegion(location, () -> {
             drawer.build();
             drawer.setContent(Base64ItemStack.decode(this.content));
         });

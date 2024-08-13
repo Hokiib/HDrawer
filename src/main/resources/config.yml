@@ -6,6 +6,7 @@ database:
   type: JSON
   save-period: 300000 #Every 5mins
   database: "database"
+  table-name: "drawers"
   mongodb:
     connection-string: "mongodb+srv://<username>:<password>@<host>/?retryWrites=true&w=majority"
   mysql:
