@@ -50,7 +50,7 @@ public final class HDrawer extends JavaPlugin {
         final Version serverVersion = Version.getCurrentVersion();
 
         if (serverVersion.isOlderThan(Version.V1_19_4)) {
-            this.getLogger().warning("Incompatible version ! (Install 1.19.4 -> 1.20.x)");
+            this.getLogger().warning("Incompatible version ! (Install 1.19.4 -> 1.21.1)");
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
